@@ -59,3 +59,4 @@ ok(0 == $?, 'Child process exited cleanly');
 done_testing();
 
 1;
+Devel::Cover::report() if Devel::Cover->can('report');

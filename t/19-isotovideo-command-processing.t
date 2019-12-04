@@ -306,3 +306,4 @@ done_testing;
 END {
     unlink OpenQA::Isotovideo::CommandHandler::AUTOINST_STATUSFILE;
 }
+Devel::Cover::report() if Devel::Cover->can('report');

@@ -37,3 +37,4 @@ subtest 'SSH credentials in spvm' => sub {
 };
 
 done_testing;
+Devel::Cover::report() if Devel::Cover->can('report');

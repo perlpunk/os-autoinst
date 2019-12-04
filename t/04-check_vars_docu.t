@@ -147,3 +147,4 @@ find(\&read_backend_pm, (BACKEND_DIR));
 write_doc;
 $error_found = $ignore_errors ? 0 : $error_found;
 exit $error_found;
+Devel::Cover::report() if Devel::Cover->can('report');

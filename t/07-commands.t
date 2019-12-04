@@ -182,3 +182,4 @@ waitpid($spid, 0);
 combined_like(sub { eval { $cserver->stop() } }, qr/commands process exited/, 'commands server stopped');
 
 done_testing;
+Devel::Cover::report() if Devel::Cover->can('report');

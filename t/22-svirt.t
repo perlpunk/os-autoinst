@@ -200,3 +200,4 @@ subtest 'SSH usage in svirt' => sub {
 };
 
 done_testing;
+Devel::Cover::report() if Devel::Cover->can('report');

@@ -25,3 +25,4 @@ ok($watch->as_data()->{laps}[1]{time} gt 0.002 && $watch->as_data()->{laps}[1]{t
 print $watch->summary();
 
 done_testing();
+Devel::Cover::report() if Devel::Cover->can('report');

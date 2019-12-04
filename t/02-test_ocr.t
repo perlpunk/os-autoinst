@@ -41,3 +41,4 @@ for my $area (@{$res->{needle}->{area}}) {
 
 ok($ocr =~ /Memory Test.*Video Mode/s, "multiple OCR regions");
 done_testing;
+Devel::Cover::report() if Devel::Cover->can('report');

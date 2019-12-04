@@ -83,3 +83,4 @@ subtest 'upload assets on demand even in failed jobs' => sub {
 };
 
 done_testing();
+Devel::Cover::report() if Devel::Cover->can('report');

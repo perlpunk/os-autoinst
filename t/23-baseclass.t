@@ -124,3 +124,4 @@ subtest 'SSH utilities' => sub {
 };
 
 done_testing;
+Devel::Cover::report() if Devel::Cover->can('report');

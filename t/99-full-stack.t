@@ -123,3 +123,4 @@ is(system('grep -q "isotovideo done" autoinst-log.txt'),                 0, 'iso
 is(system('grep -q "EXIT 0" autoinst-log.txt'),                          0, 'Test finished as expected');
 
 done_testing();
+Devel::Cover::report() if Devel::Cover->can('report');

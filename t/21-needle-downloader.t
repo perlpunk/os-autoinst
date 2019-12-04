@@ -130,3 +130,4 @@ subtest 'download added URLs' => sub {
 remove_tree($needle_dir);
 
 done_testing;
+Devel::Cover::report() if Devel::Cover->can('report');

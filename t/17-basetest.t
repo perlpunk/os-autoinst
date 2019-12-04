@@ -309,3 +309,4 @@ subtest 'register_extra_test_results' => sub {
 };
 
 done_testing;
+Devel::Cover::report() if Devel::Cover->can('report');

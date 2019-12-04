@@ -382,3 +382,4 @@ done_testing;
 unlink $socket_path . ".in";
 unlink $socket_path . ".out";
 say "The IO log file is at $log_path and the error log is $err_path.";
+Devel::Cover::report() if Devel::Cover->can('report');

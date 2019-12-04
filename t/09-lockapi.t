@@ -136,3 +136,4 @@ ok(!barrier_destroy('barrier1'), 'barrier not destroyed');
 ok(check_action('DELETE', 'barrier/barrier1', undef), 'barrier destroy request valid');
 
 done_testing;
+Devel::Cover::report() if Devel::Cover->can('report');

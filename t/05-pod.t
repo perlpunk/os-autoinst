@@ -10,3 +10,4 @@ my $curdir = dirname(__FILE__);
 
 my @files = ($curdir . '/../testapi.pm');
 all_pod_files_ok(@files);
+Devel::Cover::report() if Devel::Cover->can('report');

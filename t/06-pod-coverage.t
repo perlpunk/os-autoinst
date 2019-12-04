@@ -25,3 +25,4 @@ my $pc = Pod::Coverage->new(
 );
 is($pc->coverage, 1, 'Everything in testapi covered') || diag('Uncovered: ', join(', ', $pc->uncovered), "\n");
 done_testing();
+Devel::Cover::report() if Devel::Cover->can('report');

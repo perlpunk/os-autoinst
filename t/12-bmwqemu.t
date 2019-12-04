@@ -113,3 +113,4 @@ END {
 }
 
 1;
+Devel::Cover::report() if Devel::Cover->can('report');

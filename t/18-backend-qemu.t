@@ -42,3 +42,4 @@ ok(exists $called{add_console}, 'a console has been added');
 is($called{add_console}, 1, 'one console has been added');
 
 done_testing();
+Devel::Cover::report() if Devel::Cover->can('report');

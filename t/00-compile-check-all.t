@@ -43,3 +43,4 @@ for my $file (@files) {
     $test->ok($test->pl_file_compiles($file), "Compile test for $file");
 }
 $test->done_testing();
+Devel::Cover::report() if Devel::Cover->can('report');
