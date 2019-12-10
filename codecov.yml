@@ -20,4 +20,4 @@ coverage:
         branches: null
 fixes:
   - "/opt/run/::"
-  - "ppmclibs/blib/blib/::ppmclibs/"
+  - "*/ppmclibs/blib/blib/*::ppmclibs/"
