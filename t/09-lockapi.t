@@ -122,7 +122,7 @@ ok($@, 'missing destroy name catched');
 stderr_like { ok(barrier_create('barrier1', 3), 'barrier created') }
 qr{\A$DEBUG_RE barrier create 'barrier1' for 3 tasks\n\z}, 'barrier create STDERR ok';
 ok(check_action('POST', 'barrier', {name => 'barrier1', tasks => 3}), 'barrier create request valid');
-my $qr = qr{\A$DEBUG_RE \Qbarrier wait 'barrier1'\E.*\Qtestapi::record_info(title="Paused", output="Wait for barrier1 (on parent job)", result="ok")\E.*\Qtestapi::record_info(title="Paused 0m0s", output="Wait for barrier1 (on parent job)", result="ok")\E\n\z}s;
+my $qr = qr{\A$DEBUG_RE \Qbarrier wait 'barrier1'\E.*\Qtestapi::record_info(output="Wait for barrier1 (on parent job)", result="ok", title="Paused")\E.*\Qtestapi::record_info(output="Wait for barrier1 (on parent job)", result="ok", title="Paused 0m0s")\E\n\z}s;
 
 stderr_like { ok(barrier_wait('barrier1'), 'registered for waiting and released immideately') }
 $qr, 'barrier wait STDERR ok';
