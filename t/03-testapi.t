@@ -476,7 +476,8 @@ sub script_output_test {
     is(script_output('echo foo'), 'foo', 'script_output return only the actual output of the script');
 
     $mock_testapi->mock(wait_serial => sub { return "XXXfoo\nSCRIPT_FINISHEDXXX-1-" });
-    is(script_output('echo foo', undef, proceed_on_failure => 1), 'foo', 'proceed_on_failure=1 retrieves retrieves output of script and do not die');
+    stderr_like { is(script_output('echo foo', undef, proceed_on_failure => 1), 'foo', 'proceed_on_failure=1 retrieves retrieves output of script and do not die') }
+    qr{\A$DEBUG_RE <<< distribution::script_output.*\n}, 'script_output STDERR ok';
 
     $mock_testapi->mock(wait_serial => sub { return 'none' if (shift !~ m/SCRIPT_FINISHEDXXX-\\d\+-/) });
     like(exception { script_output('timeout'); }, qr/timeout/, 'die expected with timeout');
@@ -537,14 +538,21 @@ subtest 'wait_still_screen & assert_still_screen' => sub {
         read_json => sub {
             return {ret => {sim => 999}};
         });
-    ok(wait_still_screen,    'default arguments');
-    ok(wait_still_screen(3), 'still time specified');
-    ok(wait_still_screen(2, 4), 'still time and timeout');
-    ok(wait_still_screen(stilltime => 2, no_wait => 1), 'no_wait option can be specified');
-    ok(wait_still_screen(stilltime => 2, timeout => 5, no_wait => 1, similarity_level => 30), 'Add similarity_level & timeout');
-    ok(!wait_still_screen(timeout => 4, no_wait => 1), 'two named args, with timeout below stilltime - which will always return false');
-    ok(wait_still_screen(1, 2, timeout => 3),          'named over positional');
-    ok(assert_still_screen,                            'default arguments to assert_still_screen');
+    stderr_like { ok(wait_still_screen, 'default arguments') }
+    qr{\A$DEBUG_RE <<< testapi::wait_still_screen.*\n$DEBUG_RE >>> testapi::wait_still_screen.*\n\z}, 'wait_still_screen STDERR ok';
+    stderr_like { ok(wait_still_screen(3), 'still time specified') }
+    qr{\A$DEBUG_RE <<< testapi::wait_still_screen.*\n$DEBUG_RE >>> testapi::wait_still_screen.*\n\z}, 'wait_still_screen STDERR ok';
+    stderr_like { ok(wait_still_screen(2, 4), 'still time and timeout') }
+    qr{\A$DEBUG_RE <<< testapi::wait_still_screen.*\n$DEBUG_RE >>> testapi::wait_still_screen.*\n\z}, 'wait_still_screen STDERR ok';
+    stderr_like { ok(wait_still_screen(stilltime => 2, no_wait => 1), 'no_wait option can be specified') }
+    qr{\A$DEBUG_RE <<< testapi::wait_still_screen.*\n$DEBUG_RE >>> testapi::wait_still_screen.*\n\z}, 'wait_still_screen STDERR ok';
+    stderr_like { ok(wait_still_screen(stilltime => 2, timeout => 5, no_wait => 1, similarity_level => 30), 'Add similarity_level & timeout') }
+    qr{\A$DEBUG_RE <<< testapi::wait_still_screen.*\n$DEBUG_RE >>> testapi::wait_still_screen.*\n\z}, 'wait_still_screen STDERR ok';
+    stderr_like { ok(!wait_still_screen(timeout => 4, no_wait => 1), 'two named args, with timeout below stilltime - which will always return false') }
+    qr{\A$DEBUG_RE <<< testapi::wait_still_screen.*\n$DEBUG_RE !!! testapi::wait_still_screen.*\n\z}, 'wait_still_screen STDERR ok';
+    stderr_like { ok(wait_still_screen(1, 2, timeout => 3), 'named over positional') }
+    qr{\A$DEBUG_RE <<< testapi::wait_still_screen.*\n$DEBUG_RE >>> testapi::wait_still_screen.*\n\z}, 'wait_still_screen STDERR ok';
+    ok(assert_still_screen, 'default arguments to assert_still_screen');
     my $testapi = Test::MockModule->new('testapi');
     $testapi->mock(wait_still_screen => sub { die "wait_still_screen(@_)" });
     like(exception { assert_still_screen similarity_level => 9999; }, qr/wait_still_screen\(similarity_level 9999\)/,
@@ -555,8 +563,8 @@ subtest 'set console tty and other args' => sub {
     # ensure previously emitted commands are cleared
     $cmds = ();
 
-    console->set_tty(4);
-    console->set_args(tty => 5, foo => 'bar');
+    stderr_like { console->set_tty(4) } qr{\A$DEBUG_RE \Q<<< testapi::console(testapi_console="a-console")\E\n$DEBUG_RE \Q<<< backend::console_proxy::__ANON__(wrapped_call=\E\{}, 'set_tty 4 STDERR ok';
+    stderr_like { console->set_args(tty => 5, foo => 'bar') } qr{\A$DEBUG_RE \Q<<< testapi::console(testapi_console="a-console")\E\n$DEBUG_RE \Q<<< backend::console_proxy::__ANON__(wrapped_call=\E}, 'set_args STDERR ok';
 
     is_deeply(
         $cmds,
