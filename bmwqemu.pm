@@ -297,7 +297,7 @@ sub log_call {
             }
             push @result, join("=", $key, pp($value));
         }
-        $params = join(", ", @result);
+        $params = join(", ", sort @result);
     }
     $logger = Mojo::Log->new(level => 'debug', format => \&log_format_callback) unless $logger;
     $logger->debug('<<< ' . $fname . "($params)");
