@@ -40,9 +40,14 @@ $backend_mock->mock(select_console => undef);
 $testapi::distri = distribution->new;
 ($backend->{"select_$_"} = Test::MockObject->new)->set_true('add') for qw(read write);
 stderr_like { ok($backend->start_qemu(), 'qemu can be started'); }
-qr/\A$DEBUG_RE running .*chattr.*\n$DEBUG_RE running.*qemu-img.*\n$DEBUG_RE Formatting.*\n$DEBUG_RE !!! backend::qemu::create_virtio_console_fifo.*\n$DEBUG_RE !!! backend::qemu::create_virtio_console_fifo.*\n\z/,
+qr/\A$DEBUG_RE running .*chattr.*\n$DEBUG_RE running.*qemu-img.*\n$DEBUG_RE Formatting.*\n\z/,
   'preparing local files';
 ok(exists $called{add_console}, 'a console has been added');
 is($called{add_console}, 1, 'one console has been added');
 
 done_testing();
+
+END {
+    unlink "$Bin/../virtio_console.in";
+    unlink "$Bin/../virtio_console.out";
+}
