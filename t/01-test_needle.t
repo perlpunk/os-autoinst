@@ -11,7 +11,7 @@ use File::Path 'make_path';
 use File::Temp 'tempdir';
 use FindBin '$Bin';
 use lib "$Bin/lib";
-use OpenQA::Test::Warnings qw(stderr_like combined_like);
+use OpenQA::Test::Warnings qw(stderr_like combined_like $DEBUG_RE);
 
 # optional but very useful
 eval 'use Test::More::Color';
@@ -35,7 +35,8 @@ throws_ok(
 
 sub needle_init {
     my $ret;
-    stderr_like sub { $ret = needle::init }, qr/loaded.*needles/, 'log output for needle init';
+    stderr_like { $ret = needle::init }
+    qr{$DEBUG_RE git hash in.*\n$DEBUG_RE init needles.*\n$DEBUG_RE loaded.*needles\n\z}, 'log output for needle init';
     return $ret;
 }
 
@@ -97,7 +98,7 @@ subtest 'handle failure to load image' => sub {
     my $missing_needle_path = $needle_without_png->{png} .= '.missing.png';
     stderr_like sub {
         is($needle_without_png->get_image, undef, 'get_image returns undef if no image present');
-    }, qr/Could not open image/, 'log output for missing image';
+    }, qr/\ACould not open image.*\n\z/, 'log output for missing image';
 
     stderr_like(
         sub {
@@ -108,7 +109,7 @@ subtest 'handle failure to load image' => sub {
             is_deeply($candidates, [], 'missing needle not even considered as candidate')
               or diag explain $candidates;
         },
-        qr{.*Could not open image .*$missing_needle_path.*\n.*skipping console\.ref\: missing PNG.*},
+        qr{\ACould not open image .*$missing_needle_path.*\n.*skipping console\.ref\: missing PNG.*\n\z},
         'needle with missing PNG skipped'
     );
 };

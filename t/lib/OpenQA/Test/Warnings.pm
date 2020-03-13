@@ -28,7 +28,10 @@ use Test::More   ();
 use Test::Warnings 'warnings';
 
 use base 'Exporter';
-our @EXPORT_OK = qw(&stderr_like &stderr_unlike &combined_like);
+our @EXPORT_OK = qw(&stderr_like &stderr_unlike &combined_like $DEBUG_RE);
+
+# Match [2020-03-13T18:48:42.101 CET] [debug]
+our $DEBUG_RE = qr{^\[[0-9A-Za-z. :-]+\] (?:\[\d+\] )?\[(?:debug|info|warn)\]}m;
 
 sub stderr_like(&$;$) {
     my ($code, $re, $label) = @_;

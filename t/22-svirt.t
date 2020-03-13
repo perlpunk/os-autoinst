@@ -10,7 +10,7 @@ use Test::Warnings;
 use Test::Exception;
 use FindBin '$Bin';
 use lib "$Bin/lib";
-use OpenQA::Test::Warnings qw(stderr_like stderr_unlike combined_like);
+use OpenQA::Test::Warnings qw(stderr_like stderr_unlike combined_like $DEBUG_RE);
 use Mojo::Log;
 use Scalar::Util 'refaddr';
 use XML::SemanticDiff;
@@ -157,7 +157,7 @@ subtest 'SSH usage in svirt' => sub {
     # check connection handling
     my $ssh1 = $svirt->new_ssh_connection();
     my ($ssh2, $ssh3, $ssh4);
-    my $exp_log        = qr/SSH connection to root\@bar established/;
+    my $exp_log        = qr/\A$DEBUG_RE <<< backend::baseclass::new_ssh_connection.*\n$DEBUG_RE SSH connection to root\@bar established\n\z/;
     my $default_logger = $bmwqemu::logger;
     $bmwqemu::logger = Mojo::Log->new(level => 'debug');
     stderr_like { $ssh2 = $svirt->new_ssh_connection(); } $exp_log, 'New SSH connection announced in logs';

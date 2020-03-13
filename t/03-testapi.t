@@ -8,7 +8,7 @@ use File::Temp;
 use Test::More;
 use FindBin '$Bin';
 use lib "$Bin/lib";
-use OpenQA::Test::Warnings qw(stderr_like combined_like);
+use OpenQA::Test::Warnings qw(stderr_like combined_like $DEBUG_RE);
 use Test::Fatal;
 use Test::Warnings ':all';
 use Test::Exception;
@@ -205,11 +205,11 @@ subtest 'send_key with wait_screen_change' => sub {
 };
 
 is($autotest::current_test->{dents}, 0, 'no soft failures so far');
-stderr_like(\&record_soft_failure, qr/record_soft_failure\(reason=undef\)/, 'soft failure recorded in log');
+stderr_like(\&record_soft_failure, qr/\A$DEBUG_RE <<< testapi::record_soft_failure\(reason=undef\)\n\z/, 'soft failure recorded in log');
 is($autotest::current_test->{dents},             1, 'one dent recorded');
 is(scalar @{$autotest::current_test->{details}}, 1, 'exactly one detail added recorded');
 
-stderr_like(sub { record_soft_failure('workaround for bug#1234') }, qr/record_soft_failure.*reason=.*workaround for bug#1234.*/, 'soft failure with reason');
+stderr_like(sub { record_soft_failure('workaround for bug#1234') }, qr/\A$DEBUG_RE <<< testapi::record_soft_failure.*reason=.*workaround for bug#1234.*\n\z/, 'soft failure with reason');
 is($autotest::current_test->{dents},             2, 'one more dent recorded');
 is(scalar @{$autotest::current_test->{details}}, 2, 'exactly one more detail added recorded');
 my $details    = $autotest::current_test->{details}[-1];
@@ -281,13 +281,13 @@ subtest 'check_assert_screen' => sub {
     stderr_like {
         is_deeply(assert_screen('foo', 1), {needle => 1}, 'expected and found MATCH reported');
     }
-    qr/assert_screen(.*timeout=1)/;
-    stderr_like { assert_screen('foo', 3, timeout => 2) } qr/timeout=2/, 'named over positional';
-    stderr_like { assert_screen('foo') } qr/timeout=30/, 'default timeout';
-    stderr_like { assert_screen('foo', no_wait => 1) } qr/no_wait=1/, 'no wait option';
-    stderr_like { check_screen('foo') } qr/timeout=0/, 'check_screen with timeout of 0';
-    stderr_like { check_screen('foo',         42) } qr/timeout=42/, 'check_screen with timeout variable';
-    stderr_like { check_screen([qw(foo bar)], 42) } qr/timeout=42/, 'check_screen with multiple tags';
+    qr/\A$DEBUG_RE \Q<<< testapi::assert_screen(mustmatch="foo", timeout=1)\E\n\z/;
+    stderr_like { assert_screen('foo', 3, timeout => 2) } qr/\A$DEBUG_RE \Q<<< testapi::assert_screen(mustmatch="foo", timeout=2)\E\n\z/, 'named over positional';
+    stderr_like { assert_screen('foo') } qr/\A$DEBUG_RE \Q<<< testapi::assert_screen(mustmatch="foo", timeout=30)\E\n\z/, 'default timeout';
+    stderr_like { assert_screen('foo', no_wait => 1) } qr/\A$DEBUG_RE \Q<<< testapi::assert_screen(mustmatch="foo", no_wait=1, timeout=30)\E\n\z/, 'no wait option';
+    stderr_like { check_screen('foo') } qr/\A$DEBUG_RE \Q<<< testapi::check_screen(mustmatch="foo", timeout=0)\E\n\z/, 'check_screen with timeout of 0';
+    stderr_like { check_screen('foo', 42) } qr/\A$DEBUG_RE \Q<<< testapi::check_screen(mustmatch="foo", timeout=42/, 'check_screen with timeout variable';
+    stderr_like { check_screen([qw(foo bar)], 42) } qr/\A$DEBUG_RE \Q<<< testapi::check_screen(mustmatch=[\E\n.*"foo",\n.*"bar"\n\], timeout=42\)\n\z/, 'check_screen with multiple tags';
 
     $fake_needle_found = 0;
     is($report_timeout_called, 0, 'report_timeout not called yet');

@@ -98,7 +98,7 @@ subtest 'add relevant downloads' => sub {
         sub {
             $downloader->add_relevant_downloads(\@new_needles);
         },
-        qr/.*skipping downloading new needle: $needles_dir\/foo\.png seems already up-to-date.*/,
+        qr/\A.*skipping downloading new needle: $needles_dir\/foo\.png seems already up-to-date.*\n\z/,
         'skipped downloads logged'
     );
     is_deeply($downloader->files_to_download, \@expected_downloads, 'downloads added')

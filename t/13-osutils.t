@@ -22,7 +22,7 @@ use Test::MockModule;
 use Test::Warnings ':all';
 use FindBin '$Bin';
 use lib "$Bin/lib";
-use OpenQA::Test::Warnings qw(stderr_like combined_like);
+use OpenQA::Test::Warnings qw(stderr_like combined_like $DEBUG_RE);
 
 subtest qv => sub {
     use osutils 'qv';
@@ -161,10 +161,14 @@ subtest runcmd => sub {
     use osutils 'runcmd';
 
     my @cmd = ('qemu-img', 'create', '-f', 'qcow2', 'image.qcow2', '1G');
-    is runcmd(@cmd), 0, "qemu-image creation and get its return code";
-    is runcmd('rm', 'image.qcow2'), 0, "delete image and get its return code";
+    stderr_like { is runcmd(@cmd), 0, "qemu-image creation and get its return code" }
+    qr{\A$DEBUG_RE running qemu-img create -f qcow2 image.qcow2 1G\n.*Formatting 'image.qcow2'.*\n\z}, 'qemu-image creation STDERR ok';
+    stderr_like { is runcmd('rm', 'image.qcow2'), 0, "delete image and get its return code" }
+    qr{\A$DEBUG_RE running rm image.qcow2\n\z}, 'qemu-image deletion STDERR ok';
     local $@;
-    stderr_like(sub { eval { runcmd('ls', 'image.qcow2') } }, qr/No such file or directory/, 'no image found as expected');
+    stderr_like { eval { runcmd('ls', 'image.qcow2') } }
+    qr{\A$DEBUG_RE .*running ls image.qcow2\n$DEBUG_RE ls: cannot access 'image.qcow2': No such file or directory\n\z}m,
+      'no image found as expected';
     like $@, qr/runcmd failed with exit code \d+/, "command failed and calls die";
 };
 
@@ -175,25 +179,26 @@ subtest attempt => sub {
     $module->mock(wait_attempt => sub { sleep 0; });
 
     my $var = 0;
-    attempt(5, sub { $var == 5 }, sub { $var++ });
-    is $var, 5;
+    stderr_like { attempt(5, sub { $var == 5 }, sub { $var++ }) }
+    qr{\A$DEBUG_RE Waiting for 0 attempts.*Waiting for 4 attempts\n.*Finished after 5 attempts\n\z}s, '5 attempts STDERR ok';
+    is $var, 5, '5 attempts';
     $var = 0;
-    attempt {
-        attempts  => 6,
-        condition => sub { $var == 6 },
-        cb        => sub { $var++ }
-    };
-    is $var, 6;
+    stderr_like { attempt {
+            attempts  => 6,
+            condition => sub { $var == 6 },
+            cb        => sub { $var++ }
+    } } qr{\A$DEBUG_RE Waiting for 0 attempts.*Waiting for 5 attempts\n.*Finished after 6 attempts\n\z}s, '6 attempts STDERR ok';
+    is $var, 6, '6 attempts';
 
     $var = 0;
-    attempt {
-        attempts  => 6,
-        condition => sub { $var == 7 },
-        cb        => sub { $var++ },
-        or        => sub { $var = 42 }
-    };
+    stderr_like { attempt {
+            attempts  => 6,
+            condition => sub { $var == 7 },
+            cb        => sub { $var++ },
+            or        => sub { $var = 42 }
+    } } qr{\A$DEBUG_RE Waiting for 0 attempts.*Waiting for 5 attempts\n.*Finished after 6 attempts\n\z}s, '6 attempts STDERR ok';
 
-    is $var, 42;
+    is $var, 42, '6 attempts';
 };
 
 done_testing();
