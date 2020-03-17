@@ -100,7 +100,7 @@ subtest 'set pause at test' => sub {
     stderr_like { $command_handler->process_command($answer_fd, {
                 cmd  => 'set_pause_at_test',
                 name => 'some test',
-    }) } qr{\A$DEBUG_RE isotovideo: test execution will be paused at test some test\n\z}, 'set_pause_at_test STDERR ok';
+    }) } [qr/isotovideo: test execution will be paused at test some test/], 'set_pause_at_test STDERR ok';
     is_deeply($last_received_msg_by_fd[$answer_fd],  {ret               => 1},           'answer received');
     is_deeply($last_received_msg_by_fd[$cmd_srv_fd], {set_pause_at_test => 'some test'}, 'broadcasted via command server');
     is($command_handler->pause_test_name, 'some test', 'test to pause at set');
@@ -108,7 +108,7 @@ subtest 'set pause at test' => sub {
     stderr_like { $command_handler->process_command($answer_fd, {
                 cmd  => 'set_pause_at_test',
                 name => undef,
-    }) } qr{\A$DEBUG_RE isotovideo: test execution will no longer be paused at a certain test\n\z}, 'unset set_pause_at_test STDERR ok';
+    }) } [qr/isotovideo: test execution will no longer be paused at a certain test/], 'unset set_pause_at_test STDERR ok';
     is_deeply($last_received_msg_by_fd[$answer_fd],  {ret               => 1},     'answer received');
     is_deeply($last_received_msg_by_fd[$cmd_srv_fd], {set_pause_at_test => undef}, 'broadcasted via command server');
     is($command_handler->pause_test_name, undef, 'test to pause at unset');
@@ -159,7 +159,7 @@ subtest 'report timeout, set pause on assert/check screen timeout' => sub {
 
     # report timeout when supposed to pause
     stderr_like { $command_handler->process_command($answer_fd, \%basic_report_timeout_cmd) }
-    qr{\A$DEBUG_RE isotovideo: pausing test execution on timeout as requested at installation-welcome\n\z}, 'set_pause_on_screen_mismatch STDERR ok';
+    [qr/isotovideo: pausing test execution on timeout as requested at installation-welcome/], 'set_pause_on_screen_mismatch STDERR ok';
     # note: $last_received_msg_by_fd[$answer_fd] does not contain {ret => 1} because answer has
     #       been postponed
     is_deeply($last_received_msg_by_fd[$cmd_srv_fd], {
@@ -192,7 +192,7 @@ subtest 'report timeout, set pause on assert/check screen timeout' => sub {
     });
     is_deeply($last_received_msg_by_fd[$answer_fd], {ret => 1}, 'configured to pause on check_screen');
     stderr_like { $command_handler->process_command($answer_fd, \%basic_report_timeout_cmd) }
-    qr{\A$DEBUG_RE isotovideo: pausing test execution on timeout as requested at installation-welcome\n\z}, 'timeout STDERR ok';
+    [qr/isotovideo: pausing test execution on timeout as requested at installation-welcome/], 'timeout STDERR ok';
     is_deeply($last_received_msg_by_fd[$answer_fd], {ret => 1}, 'supposed to pause on check_screen');
 
     # disabling pause on assert_screen timeout disables pause on check_screen timeout as well
@@ -222,7 +222,7 @@ subtest 'set_pause_on_next_command, postponing command, resuming' => sub {
 
     # check whether the next command gets postponed and the test paused
     stderr_like { $command_handler->process_command($answer_fd, {cmd => 'check_screen'}) }
-    qr{\A$DEBUG_RE isotovideo: paused, so not passing check_screen to backend\n\z}, 'check_screen STDERR ok';
+    [qr/isotovideo: paused, so not passing check_screen to backend/], 'check_screen STDERR ok';
     is_deeply($last_received_msg_by_fd[$cmd_srv_fd], {
             paused => {cmd => 'check_screen'},
             reason => 'reached check_screen and pause on next command enabled',
@@ -242,7 +242,7 @@ subtest 'set_pause_on_next_command, postponing command, resuming' => sub {
 
     # resume postponed command
     stderr_like { $command_handler->process_command($answer_fd, {cmd => 'resume_test_execution'}) }
-qr{\A$DEBUG_RE isotovideo: test execution will be resumed\n.*isotovideo: resuming, continue passing check_screen to backend\n\z}, 'resume_test_execution STDERR ok';
+    [qr/isotovideo: test execution will be resumed/, qr/isotovideo: resuming, continue passing check_screen to backend/], 'resume_test_execution STDERR ok';
     is_deeply($last_received_msg_by_fd[$cmd_srv_fd], {
             check_screen => {
                 check     => undef,

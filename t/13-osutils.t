@@ -162,12 +162,12 @@ subtest runcmd => sub {
 
     my @cmd = ('qemu-img', 'create', '-f', 'qcow2', 'image.qcow2', '1G');
     stderr_like { is runcmd(@cmd), 0, "qemu-image creation and get its return code" }
-    qr{\A$DEBUG_RE running qemu-img create -f qcow2 image.qcow2 1G\n.*Formatting 'image.qcow2'.*\n\z}, 'qemu-image creation STDERR ok';
+    [qr/running qemu-img create -f qcow2 image.qcow2 1G/, qr/Formatting 'image.qcow2'/], 'qemu-image creation STDERR ok';
     stderr_like { is runcmd('rm', 'image.qcow2'), 0, "delete image and get its return code" }
-    qr{\A$DEBUG_RE running rm image.qcow2\n\z}, 'qemu-image deletion STDERR ok';
+    [qr/running rm image.qcow2/], 'qemu-image deletion STDERR ok';
     local $@;
     stderr_like { eval { runcmd('ls', 'image.qcow2') } }
-    qr{\A$DEBUG_RE .*running ls image.qcow2\n$DEBUG_RE ls: cannot access 'image.qcow2': No such file or directory\n\z}m,
+    [qr/running ls image.qcow2/, qr/ls: cannot access 'image.qcow2': No such file or directory/],
       'no image found as expected';
     like $@, qr/runcmd failed with exit code \d+/, "command failed and calls die";
 };
@@ -180,7 +180,7 @@ subtest attempt => sub {
 
     my $var = 0;
     stderr_like { attempt(5, sub { $var == 5 }, sub { $var++ }) }
-    qr{\A$DEBUG_RE Waiting for 0 attempts.*Waiting for 4 attempts\n.*Finished after 5 attempts\n\z}s, '5 attempts STDERR ok';
+    qr{Waiting for 0 attempts.*Waiting for 4 attempts\n.*Finished after 5 attempts\n\z}s, '5 attempts STDERR ok';
     is $var, 5, '5 attempts';
     $var = 0;
     stderr_like { attempt {

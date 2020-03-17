@@ -9,7 +9,7 @@ use Test::MockModule;
 use Test::MockObject;
 use FindBin '$Bin';
 use lib "$Bin/lib";
-use OpenQA::Test::Warnings qw(stderr_like combined_like $DEBUG_RE);
+use OpenQA::Test::Warnings qw(stderr_like combined_like);
 use Test::Warnings;
 
 use backend::qemu;
@@ -40,7 +40,7 @@ $backend_mock->mock(select_console => undef);
 $testapi::distri = distribution->new;
 ($backend->{"select_$_"} = Test::MockObject->new)->set_true('add') for qw(read write);
 stderr_like { ok($backend->start_qemu(), 'qemu can be started'); }
-qr/\A$DEBUG_RE running .*chattr.*\n$DEBUG_RE running.*qemu-img.*\n$DEBUG_RE Formatting.*\n\z/,
+[qr/running .*chattr/, qr/running.*qemu-img/, qr/Formatting/],
   'preparing local files';
 ok(exists $called{add_console}, 'a console has been added');
 is($called{add_console}, 1, 'one console has been added');

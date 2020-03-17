@@ -98,7 +98,7 @@ subtest 'add relevant downloads' => sub {
         sub {
             $downloader->add_relevant_downloads(\@new_needles);
         },
-        qr/\A.*skipping downloading new needle: $needles_dir\/foo\.png seems already up-to-date.*\n\z/,
+        [qr/skipping downloading new needle: $needles_dir\/foo\.png seems already up-to-date/],
         'skipped downloads logged'
     );
     is_deeply($downloader->files_to_download, \@expected_downloads, 'downloads added')
@@ -119,7 +119,14 @@ subtest 'download added URLs' => sub {
         sub {
             $downloader->download();
         },
-        qr/.*download new needle.*\n.*(failed to download.*server returned 404|internal error occurred).*/,
+        [
+        qr/download new needle/,
+        qr/(failed to download.*server returned 404|internal error occurred)/,
+        qr/download new needle/,
+        qr/(failed to download.*server returned 404|internal error occurred)/,
+        qr/download new needle/,
+        qr/(failed to download.*server returned 404|internal error occurred)/,
+        ],
         'errors logged'
     );
 

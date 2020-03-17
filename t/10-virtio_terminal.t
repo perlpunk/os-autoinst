@@ -78,7 +78,7 @@ subtest "Test open_pipe() error condition" => sub {
     });
     $helper = prepare_pipes($socket_path);
     $term   = consoles::virtio_terminal->new('unit-test-console', {socked_path => $socket_path});
-    my $re = qr{\A$DEBUG_RE <<< consoles::virtio_terminal::open_pipe.*\n$DEBUG_RE (::: consoles::virtio_terminal::open_pipe: Set PIPE_SZ from 1024 to 2048\n)$DEBUG_RE \1\z};
+    my $re = [qr/<<< consoles::virtio_terminal::open_pipe/, (qr/::: consoles::virtio_terminal::open_pipe: Set PIPE_SZ from 1024 to 2048/) x 2 ];
     stderr_like { $term->open_pipe() } $re, 'Log mention size';
     cleanup_pipes($helper);
     is($size, 2048, "PIPE_SZ is 2048");
@@ -107,7 +107,7 @@ subtest "Test open_pipe() error condition" => sub {
     testapi::set_var('VIRTIO_CONSOLE_PIPE_SZ', 5555);
     $helper = prepare_pipes($socket_path);
     $term   = consoles::virtio_terminal->new('unit-test-console', {socked_path => $socket_path});
-    $re = qr{\A$DEBUG_RE <<< consoles::virtio_terminal::open_pipe.*\n$DEBUG_RE (::: consoles::virtio_terminal::open_pipe: Set PIPE_SZ from 1024 to 5555\n)$DEBUG_RE \1\z};
+    $re = [qr/<<< consoles::virtio_terminal::open_pipe/, (qr/::: consoles::virtio_terminal::open_pipe: Set PIPE_SZ from 1024 to 5555/) x 2 ];
     stderr_like { $term->open_pipe() } $re, 'Log mention new size';
     cleanup_pipes($helper);
     is($size, 5555, "PIPE_SZ is 5555 from VIRTIO_CONSOLE_PIPE_SZ");

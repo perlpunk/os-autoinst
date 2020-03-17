@@ -29,17 +29,17 @@ unless (which('tesseract')) {
     exit(0);
 }
 
-stderr_like sub { needle::init }, qr/\A$DEBUG_RE git hash.*\n$DEBUG_RE init needles.*\n$DEBUG_RE loaded.*needles\n\z/, 'log output for needle init';
+stderr_like sub { needle::init }, [qr/git hash/, qr/init needles/, qr/loaded.*needles/], 'log output for needle init';
 my $img1   = tinycv::read(needle::needles_dir() . '/bootmenu.test.png');
 my $needle = needle->new('bootmenu-ocr.ref.json');
 my $res;
-stderr_like sub { $res = $img1->search($needle) }, qr/\A(Tesseract.*OCR.*\nWarning.*\n)\1\z/, 'log output for OCR';
+stderr_like sub { $res = $img1->search($needle) }, [(qr/Tesseract.*OCR/ , qr/Warning/) x 2], 'log output for OCR';
 ok(defined $res, 'ocr match 1');
 
 my $ocr;
 for my $area (@{$res->{needle}->{area}}) {
     next unless $area->{type} eq 'ocr';
-    stderr_like sub { $ocr .= ocr::tesseract($img1, $area) }, qr/\ATesseract.*OCR.*\nWarning.*\n\z/, 'log output for tesseract call';
+    stderr_like sub { $ocr .= ocr::tesseract($img1, $area) }, [qr/Tesseract.*OCR/ , qr/Warning/], 'log output for tesseract call';
 }
 
 ok($ocr =~ /Memory Test.*Video Mode/s, 'multiple OCR regions');

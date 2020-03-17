@@ -41,6 +41,7 @@ requires 'Net::DBus';
 requires 'Net::SNMP';
 requires 'Net::SSH2';
 requires 'POSIX';
+requires 'Test::Deep';
 requires 'Thread::Queue';
 requires 'Time::HiRes';
 requires 'Try::Tiny';

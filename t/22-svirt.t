@@ -157,12 +157,12 @@ subtest 'SSH usage in svirt' => sub {
     # check connection handling
     my $ssh1 = $svirt->new_ssh_connection();
     my ($ssh2, $ssh3, $ssh4);
-    my $exp_log        = qr/\A$DEBUG_RE <<< backend::baseclass::new_ssh_connection.*\n$DEBUG_RE SSH connection to root\@bar established\n\z/;
+    my $exp_log        = [qr/<<< backend::baseclass::new_ssh_connection/, qr/SSH connection to root\@bar established/];
     my $default_logger = $bmwqemu::logger;
     $bmwqemu::logger = Mojo::Log->new(level => 'debug');
     stderr_like { $ssh2 = $svirt->new_ssh_connection(); } $exp_log, 'New SSH connection announced in logs';
     stderr_like { $ssh3 = $svirt->new_ssh_connection(keep_open => 1); } $exp_log, 'New SSH connection announced in logs';
-    stderr_unlike { $ssh4 = $svirt->new_ssh_connection(keep_open => 1); } $exp_log, 'No new SSH connection announced, if it already exists';
+    stderr_unlike { $ssh4 = $svirt->new_ssh_connection(keep_open => 1); } qr/SSH connection to root\@bar established/, 'No new SSH connection announced, if it already exists';
     $bmwqemu::logger = $default_logger;
     $ssh_expect_credentials->{username} = 'foo911';
     my $ssh5 = $svirt->new_ssh_connection(keep_open => 1, username => 'foo911');

@@ -25,6 +25,7 @@ use warnings;
 
 use Test::Output ();
 use Test::More   ();
+use Test::Deep qw(re cmp_deeply);
 use Test::Warnings 'warnings';
 
 use base 'Exporter';
@@ -36,9 +37,22 @@ our $DEBUG_RE = qr{^\[[0-9A-Za-z. :-]+\] (?:\[\d+\] )?\[(?:debug|info|warn)\]}m;
 sub stderr_like(&$;$) {
     my ($code, $re, $label) = @_;
     local $Test::Builder::Level = $Test::Builder::Level + 3;
-    my @warnings = warnings(sub {
-            Test::Output::stderr_like(sub { $code->() }, $re, $label);
-    });
+    my @warnings;
+    if (ref($re) eq 'ARRAY') {
+        @warnings = warnings(sub {
+                my $stderr = Test::Output::stderr_from(sub { $code->() });
+                my @lines = split m/(?<=\n)/, $stderr;
+                my @compare = map {
+                    ref($_) eq 'Regexp' ? re($_) : $_
+                } @$re;
+                cmp_deeply(\@lines, \@compare, $label);
+        });
+    }
+    else {
+        @warnings = warnings(sub {
+                Test::Output::stderr_like(sub { $code->() }, $re, $label);
+        });
+    }
     _check_warnings(stderr_like => @warnings);
 }
 
