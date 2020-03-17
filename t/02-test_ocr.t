@@ -33,13 +33,13 @@ stderr_like sub { needle::init }, [qr/git hash/, qr/init needles/, qr/loaded.*ne
 my $img1   = tinycv::read(needle::needles_dir() . '/bootmenu.test.png');
 my $needle = needle->new('bootmenu-ocr.ref.json');
 my $res;
-stderr_like sub { $res = $img1->search($needle) }, [(qr/Tesseract.*OCR/ , qr/Warning/) x 2], 'log output for OCR';
+stderr_like sub { $res = $img1->search($needle) }, [(qr/Tesseract.*OCR/, qr/Warning/) x 2], 'log output for OCR';
 ok(defined $res, 'ocr match 1');
 
 my $ocr;
 for my $area (@{$res->{needle}->{area}}) {
     next unless $area->{type} eq 'ocr';
-    stderr_like sub { $ocr .= ocr::tesseract($img1, $area) }, [qr/Tesseract.*OCR/ , qr/Warning/], 'log output for tesseract call';
+    stderr_like sub { $ocr .= ocr::tesseract($img1, $area) }, [qr/Tesseract.*OCR/, qr/Warning/], 'log output for tesseract call';
 }
 
 ok($ocr =~ /Memory Test.*Video Mode/s, 'multiple OCR regions');

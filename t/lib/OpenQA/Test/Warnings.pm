@@ -40,18 +40,19 @@ sub stderr_like(&$;$) {
     if (ref($re) eq 'ARRAY') {
         @warnings = warnings(sub {
                 my $stderr = Test::Output::stderr_from(sub { $code->() });
-                my @lines = split m/(?<=\n)/, $stderr;
-                my $ok = Test::More::is(scalar @lines, scalar @$re, 'Correct number of output lines');
+                my @lines  = split m/(?<=\n)/, $stderr;
+                my $ok     = Test::More::is(scalar @lines, scalar @$re, 'Correct number of output lines');
                 if ($ok) {
                     for my $i (0 .. $#lines) {
-                        my $line    = $lines[ $i ];
-                        my $compare = $re->[ $i ];
+                        my $line    = $lines[$i];
+                        my $compare = $re->[$i];
                         if (ref $compare eq 'Regexp') {
                             if ($line =~ $compare) {
                                 next;
                             }
                             else {
                                 Test::More::like($line, $compare, "Line $i matches");
+                                $ok = 0;
                                 last;
                             }
                         }
@@ -61,10 +62,14 @@ sub stderr_like(&$;$) {
                             }
                             else {
                                 Test::More::is($line, $compare, "Line $i matches");
+                                $ok = 0;
                                 last;
                             }
                         }
                     }
+                }
+                if ($ok) {
+                    Test::More::ok(1, 'Output lines match expected');
                 }
         });
     }
