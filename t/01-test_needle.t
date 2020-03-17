@@ -11,7 +11,7 @@ use File::Path 'make_path';
 use File::Temp 'tempdir';
 use FindBin '$Bin';
 use lib "$Bin/lib";
-use OpenQA::Test::Warnings qw(stderr_like combined_like $DEBUG_RE);
+use OpenQA::Test::Warnings qw(stderr_like combined_like);
 
 # optional but very useful
 eval 'use Test::More::Color';
@@ -105,7 +105,7 @@ subtest 'handle failure to load image' => sub {
     my $missing_needle_path = $needle_without_png->{png} .= '.missing.png';
     stderr_like sub {
         is($needle_without_png->get_image, undef, 'get_image returns undef if no image present');
-    }, qr/\ACould not open image.*\n\z/, 'log output for missing image';
+    }, [qr/Could not open image/], 'log output for missing image';
 
     stderr_like(
         sub {
@@ -116,7 +116,7 @@ subtest 'handle failure to load image' => sub {
             is_deeply($candidates, [], 'missing needle not even considered as candidate')
               or diag explain $candidates;
         },
-        qr{\ACould not open image .*$missing_needle_path.*\n.*skipping console\.ref\: missing PNG.*\n\z},
+        [qr/Could not open image .*$missing_needle_path/, qr/skipping console\.ref\: missing PNG/],
         'needle with missing PNG skipped'
     );
 };

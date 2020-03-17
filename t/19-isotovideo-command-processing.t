@@ -11,7 +11,7 @@ use OpenQA::Isotovideo::CommandHandler;
 use OpenQA::Isotovideo::Interface;
 use FindBin '$Bin';
 use lib "$Bin/lib";
-use OpenQA::Test::Warnings qw(stderr_like $DEBUG_RE);
+use OpenQA::Test::Warnings 'stderr_like';
 
 # declare fake file descriptors
 my $cmd_srv_fd              = 0;

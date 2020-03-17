@@ -25,7 +25,6 @@ use warnings;
 
 use Test::Output ();
 use Test::More   ();
-use Test::Deep qw(re cmp_deeply);
 use Test::Warnings 'warnings';
 
 use base 'Exporter';
@@ -42,10 +41,31 @@ sub stderr_like(&$;$) {
         @warnings = warnings(sub {
                 my $stderr = Test::Output::stderr_from(sub { $code->() });
                 my @lines = split m/(?<=\n)/, $stderr;
-                my @compare = map {
-                    ref($_) eq 'Regexp' ? re($_) : $_
-                } @$re;
-                cmp_deeply(\@lines, \@compare, $label);
+                my $ok = Test::More::is(scalar @lines, scalar @$re, 'Correct number of output lines');
+                if ($ok) {
+                    for my $i (0 .. $#lines) {
+                        my $line    = $lines[ $i ];
+                        my $compare = $re->[ $i ];
+                        if (ref $compare eq 'Regexp') {
+                            if ($line =~ $compare) {
+                                next;
+                            }
+                            else {
+                                Test::More::like($line, $compare, "Line $i matches");
+                                last;
+                            }
+                        }
+                        else {
+                            if ($line eq $compare) {
+                                next;
+                            }
+                            else {
+                                Test::More::is($line, $compare, "Line $i matches");
+                                last;
+                            }
+                        }
+                    }
+                }
         });
     }
     else {

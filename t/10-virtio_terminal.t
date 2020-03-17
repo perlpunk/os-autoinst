@@ -9,7 +9,7 @@ use Test::Exception;
 use Test::MockModule;
 use FindBin '$Bin';
 use lib "$Bin/lib";
-use OpenQA::Test::Warnings qw(stderr_like combined_like $DEBUG_RE);
+use OpenQA::Test::Warnings qw(stderr_like combined_like);
 use POSIX 'mkfifo';
 
 use consoles::virtio_terminal;
@@ -87,7 +87,7 @@ subtest "Test open_pipe() error condition" => sub {
     $vterminal_mock->mock("set_pipe_sz", undef);
     $helper = prepare_pipes($socket_path);
     $term   = consoles::virtio_terminal->new('unit-test-console', {socked_path => $socket_path});
-    $re = qr{\A$DEBUG_RE <<< consoles::virtio_terminal::open_pipe.*\n$DEBUG_RE (::: consoles::virtio_terminal::open_pipe: Set PIPE_SZ from 1024 to 1024\n)$DEBUG_RE \1\z};
+    $re = [qr/<<< consoles::virtio_terminal::open_pipe/, (qr/::: consoles::virtio_terminal::open_pipe: Set PIPE_SZ from 1024 to 1024/) x 2];
     stderr_like { $term->open_pipe() } $re, 'Log mention new size';
     cleanup_pipes($helper);
     is($size, 1024, "Size didn't changed");

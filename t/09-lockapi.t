@@ -8,7 +8,7 @@ use Test::MockModule;
 use Test::Warnings;
 use FindBin '$Bin';
 use lib "$Bin/lib";
-use OpenQA::Test::Warnings qw(stderr_like $DEBUG_RE);
+use OpenQA::Test::Warnings 'stderr_like';
 
 use lockapi;
 
@@ -76,34 +76,34 @@ ok($@, 'missing unlock name catched');
 # check successful ops
 $api_call_return = 200;
 stderr_like { ok(mutex_create('lock1'), 'mutex created') }
-qr{\A$DEBUG_RE mutex create 'lock1'\n\z}, 'mutex create STDERR ok';
+[qr/mutex create 'lock1'/], 'mutex create STDERR ok';
 ok(check_action('POST', 'mutex', {name => 'lock1'}), 'mutex_create request valid');
 
 stderr_like { ok(mutex_lock('lock1'), 'mutex locked') }
-qr{\A$DEBUG_RE mutex lock 'lock1'\n\z}, 'mutext lock STDERR ok';
+[qr/mutex lock 'lock1'/], 'mutext lock STDERR ok';
 ok(check_action('POST', 'mutex/lock1', {action => 'lock'}), 'mutex_lock request valid');
 
 stderr_like { ok(mutex_try_lock('lock1'), 'mutex locked') }
-qr{\A$DEBUG_RE mutex try lock 'lock1'\n\z}, 'mutex try lock STDERR ok';
+[qr/mutex try lock 'lock1'/], 'mutex try lock STDERR ok';
 ok(check_action('POST', 'mutex/lock1', {action => 'lock'}), 'mutex_lock request valid');
 
 stderr_like { ok(mutex_unlock('lock1'), 'lock unlocked') }
-qr{\A$DEBUG_RE mutex unlock 'lock1'\n\z}, 'mutext unlock STDERR ok';
+[qr/mutex unlock 'lock1'/], 'mutext unlock STDERR ok';
 ok(check_action('POST', 'mutex/lock1', {action => 'unlock'}), 'mutex_unlock request valid');
 
 # check unsuccessful ops
 $api_call_return = 409;
 stderr_like { ok(!mutex_create('lock1'), 'mutex not created') }
-qr{\A$DEBUG_RE mutex create 'lock1'\n\z}, 'mutex create lock STDERR ok';
+[qr/mutex create 'lock1'/], 'mutex create lock STDERR ok';
 ok(check_action('POST', 'mutex', {name => 'lock1'}), 'mutex_create request valid');
 
 # instead of mutex_lock test mutex_try_lock to avoid block
 stderr_like { ok(!mutex_try_lock('lock1'), 'mutex not locked') }
-qr{\A$DEBUG_RE mutex try lock 'lock1'\n\z}, 'mutex try lock STDERR ok';
+[qr/mutex try lock 'lock1'/], 'mutex try lock STDERR ok';
 ok(check_action('POST', 'mutex/lock1', {action => 'lock'}), 'mutex_lock request valid');
 
 stderr_like { ok(!mutex_unlock('lock1'), 'lock not unlocked') }
-qr{\A$DEBUG_RE mutex unlock 'lock1'\n\z}, 'mutex unlock STDERR ok';
+[qr/mutex unlock 'lock1'/], 'mutex unlock STDERR ok';
 ok(check_action('POST', 'mutex/lock1', {action => 'unlock'}), 'mutex_unlock request valid');
 
 
@@ -120,9 +120,9 @@ eval { barrier_destroy; };
 ok($@, 'missing destroy name catched');
 
 stderr_like { ok(barrier_create('barrier1', 3), 'barrier created') }
-qr{\A$DEBUG_RE barrier create 'barrier1' for 3 tasks\n\z}, 'barrier create STDERR ok';
+[qr/barrier create 'barrier1' for 3 tasks/], 'barrier create STDERR ok';
 ok(check_action('POST', 'barrier', {name => 'barrier1', tasks => 3}), 'barrier create request valid');
-my $qr = qr{\A$DEBUG_RE \Qbarrier wait 'barrier1'\E.*\Qtestapi::record_info(output="Wait for barrier1 (on parent job)", result="ok", title="Paused")\E.*\Qtestapi::record_info(output="Wait for barrier1 (on parent job)", result="ok", title="Paused 0m0s")\E\n\z}s;
+my $qr = [qr/barrier wait 'barrier1'/, qr/\Qtestapi::record_info(output="Wait for barrier1 (on parent job)", result="ok", title="Paused")\E/, qr/\Qtestapi::record_info(output="Wait for barrier1 (on parent job)", result="ok", title="Paused 0m0s")\E/];
 
 stderr_like { ok(barrier_wait('barrier1'), 'registered for waiting and released immideately') }
 $qr, 'barrier wait STDERR ok';
@@ -137,19 +137,19 @@ $qr, 'barrier wait STDERR ok';
 ok(check_action('POST', 'barrier/barrier1', {check_dead_job => 1}), 'barrier wait request valid with check_dead_job');
 
 stderr_like { ok(barrier_destroy('barrier1'), 'barrier destroyed') }
-qr{\A$DEBUG_RE barrier destroy 'barrier1'\n\z}, 'barrier destroy STDERR ok';
+[qr/barrier destroy 'barrier1'/], 'barrier destroy STDERR ok';
 ok(check_action('DELETE', 'barrier/barrier1', undef), 'barrier destroy request valid');
 
 $api_call_return = 409;
 stderr_like { ok(!barrier_create('barrier1', 3), 'barrier not created') }
-qr{\A$DEBUG_RE barrier create 'barrier1' for 3 tasks\n\z},
+[qr/barrier create 'barrier1' for 3 tasks/],
   'barrier create STDERR ok';
 
 ok(check_action('POST', 'barrier', {name => 'barrier1', tasks => 3}), 'barrier create request valid');
 
 # instead of barrier_wait test barrier_try_wait to avoid block
 stderr_like { ok(!barrier_try_wait('barrier1'), 'registered for waiting and waiting'); }
-qr{\A$DEBUG_RE barrier try wait 'barrier1'\n\z}, 'barrier try wait STDERR ok';
+[qr/barrier try wait 'barrier1'/], 'barrier try wait STDERR ok';
 ok(check_action('POST', 'barrier/barrier1', undef), 'barrier wait request valid');
 
 ok(!barrier_destroy('barrier1'),                      'barrier not destroyed');

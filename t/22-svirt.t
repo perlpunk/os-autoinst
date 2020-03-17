@@ -10,7 +10,7 @@ use Test::Warnings;
 use Test::Exception;
 use FindBin '$Bin';
 use lib "$Bin/lib";
-use OpenQA::Test::Warnings qw(stderr_like stderr_unlike combined_like $DEBUG_RE);
+use OpenQA::Test::Warnings qw(stderr_like stderr_unlike combined_like);
 use Mojo::Log;
 use Scalar::Util 'refaddr';
 use XML::SemanticDiff;
