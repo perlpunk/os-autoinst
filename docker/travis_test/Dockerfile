@@ -16,39 +16,79 @@ RUN zypper in -y -C \
        gcc \
        gcc-c++ \
        git \
-       gmp-devel \
        gzip \
-       libexpat-devel \
        libsndfile-devel \
        libssh2-1 \
        libssh2-devel \
        libtheora-devel \
        libtool \
-       libxml2-devel \
        make \
        opencv-devel \
        patch \
-       postgresql-devel \
        qemu \
        qemu-tools \
        qemu-kvm \
        tar \
-       optipng \
-       python3-base \
-       python3-requests \
-       python3-future \
-       sqlite3 \
-       postgresql-server \
        which \
-       chromedriver \
        xorg-x11-fonts \
-       'rubygem(sass)' \
        perl \
        ShellCheck \
+       sudo \
+       aspell-spell \
+       aspell-en \
+       systemd-sysvinit \
+       systemd libudev1 tack \
+       gmp-devel \
+       libexpat-devel \
+       libxml2-devel \
+   && true
+
+RUN zypper in -y -C \
+       'perl(Archive::Extract)' \
+       'perl(Class::Accessor)' \
+       'perl(Cpanel::JSON::XS)' \
+       'perl(Crypt::DES)' \
+       'perl(Devel::Cover)' \
+       'perl(Devel::Cover::Report::Codecov)' \
+       'perl(Exception::Class)' \
+       'perl(File::Touch)' \
+       'perl(IO::Scalar)' \
+       'perl(IPC::Run)' \
+       'perl(IPC::System::Simple)' \
+       'perl(Mojo::IOLoop::ReadWriteProcess)' \
+       'perl(Mojo::JSON)' \
+       'perl(Net::DBus)' \
+       'perl(Net::SSH2)' \
+       'perl(Perl::Critic)' \
+       'perl(Perl::Critic::Freenode)' \
+       'perl(Pod::Coverage)' \
+       'perl(Socket::MsgHdr)' \
+       'perl(Test::Exception)' \
+       'perl(Test::Fatal)' \
+       'perl(Test::MockModule)' \
+       'perl(Test::MockObject)' \
+       'perl(Test::Mock::Time)' \
+       'perl(Test::Output)' \
+       'perl(Test::Pod)' \
+       'perl(Test::Strict)' \
+       'perl(Test::Warnings)' \
+       'perl(Try::Tiny)' \
+       'perl(XML::LibXML)' \
+       'perl(XML::SemanticDiff)' \
+  && true
+
+RUN echo \
+       chromedriver \
+       optipng \
+       postgresql-devel \
+       postgresql-server \
+       python3-base \
+       python3-future \
+       python3-requests \
        python3-setuptools \
        python3-yamllint \
-       sudo \
-       'perl(App::cpanminus)' \
+       'rubygem(sass)' \
+       sqlite3 \
        'perl(Archive::Extract)' \
        'perl(BSD::Resource)' \
        'perl(CSS::Minifier::XS)' \
@@ -57,8 +97,6 @@ RUN zypper in -y -C \
        'perl(Config)' \
        'perl(Config::IniFiles)' \
        'perl(Config::Tiny)' \
-       'perl(Cpanel::JSON::XS)' \
-       'perl(Crypt::DES)' \
        'perl(Cwd)' \
        'perl(DBD::Pg)' \
        'perl(DBD::SQLite)' \
@@ -73,23 +111,15 @@ RUN zypper in -y -C \
        'perl(Data::OptList)' \
        'perl(DateTime::Format::Pg)' \
        'perl(DateTime::Format::SQLite)' \
-       'perl(Devel::Cover)' \
-       'perl(Devel::Cover::Report::Codecov)' \
        'perl(ExtUtils::MakeMaker) >= 7.12' \
-       'perl(Exception::Class)' \
        'perl(File::Copy::Recursive)' \
-       'perl(File::Touch)' \
-       'perl(IO::Scalar)' \
        'perl(IO::Socket::SSL)' \
-       'perl(IPC::Run)' \
-       'perl(IPC::System::Simple)' \
        'perl(JSON::XS)' \
        'perl(JavaScript::Minifier::XS)' \
        'perl(LWP::Protocol::https)' \
        'perl(Minion) >= 10.0' \
        'perl(Module::CPANfile)' \
        'perl(Module::Pluggable)' \
-       'perl(Mojo::IOLoop::ReadWriteProcess)' \
        'perl(Mojo::Pg)' \
        'perl(Mojo::RabbitMQ::Client)' \
        'perl(Mojo::SQLite)' \
@@ -102,40 +132,25 @@ RUN zypper in -y -C \
        'perl(YAML::XS) >= 0.67' \
        'perl(Net::OpenID::Consumer)' \
        'perl(Net::SNMP)' \
-       'perl(Net::SSH2)' \
-       'perl(Perl::Critic)' \
-       'perl(Perl::Critic::Freenode)' \
        'perl(Perl::Tidy)' \
        'perl(Pod::POM)' \
-       'perl(Pod::Coverage)' \
        'perl(Pod::Spell)' \
        'perl(SQL::SplitStatement)' \
        'perl(SQL::Translator)' \
        'perl(Selenium::Remote::Driver)' \
-       'perl(Socket::MsgHdr)' \
        'perl(Sort::Versions)' \
        'perl(Test::Compile)' \
-       'perl(Test::Strict)' \
        'perl(Test::Fatal)' \
-       'perl(Test::Pod)' \
-       'perl(Test::Mock::Time)' \
-       'perl(Test::MockModule)' \
-       'perl(Test::MockObject)' \
-       'perl(Test::Output)' \
        'perl(Socket::MsgHdr)' \
-       'perl(Test::Warnings)' \
        'perl(Text::Diff)' \
        'perl(CommonMark)' \
        'perl(Time::ParseDate)' \
        'perl(XSLoader) >= 0.24' \
-       'perl(XML::SemanticDiff)' \
        perl-Archive-Extract \
        perl-Test-Simple \
        'perl(aliased)' \
-       aspell-spell \
-       aspell-en \
-       systemd-sysvinit \
-       systemd libudev1 tack
+    && true
+
 
 VOLUME ["/sys/fs/cgroup", "/run"]
 
