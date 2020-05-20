@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x
+
 DEPS=/tmp/deps.txt
 NEWDEPS=/tmp/new-deps.txt
 
