@@ -84,4 +84,9 @@ time zypper install -y -C \
 
 rpm -qa --qf "%{NAME}-%{VERSION}\n" | sort > $NEWDEPS
 
-diff /tmp/deps.txt /tmp/new-deps.txt
+if diff /tmp/deps.txt /tmp/new-deps.txt
+then
+    echo "NO DIFF"
+else
+    echo "DIFF"
+fi
