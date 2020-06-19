@@ -14,3 +14,7 @@ getdeps_docker() {
 listdeps() {
     rpm -qa --qf "%{NAME}-%{VERSION}\n" | grep -v ^gpg-pubkey | sort
 }
+
+listdeps_perl() {
+    rpm -qa --qf "%{NAME}\n" | grep ^perl- | sort
+}
