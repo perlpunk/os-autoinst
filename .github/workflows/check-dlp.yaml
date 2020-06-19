@@ -24,7 +24,7 @@ jobs:
           ~/cachedeps
         key: ${{ github.sha }}-${{ github.ref }}
 
-    - run: ls -lrt ~/cachedeps
+    - run: ls -lrt ~/cachedeps || true
 
     - run: >
         docker run --rm --entrypoint '' -v $PWD:/opt
@@ -36,4 +36,4 @@ jobs:
         sh -c 'cd /opt && ./tools/install-patched-qemu.sh &&
         install-new-deps-dlp.sh && ./tools/cache-deps.sh'
 
-    - run: ls -lrt ~/cachedeps
+    - run: ls -lrt ~/cachedeps || true
