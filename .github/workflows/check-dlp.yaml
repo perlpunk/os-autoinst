@@ -39,7 +39,13 @@ jobs:
         -v $PWD:/opt
         $IMAGE
         sh -c 'cd /opt && ./tools/install-patched-qemu.sh &&
-        ./tools/install-new-deps-dlp.sh && ./tools/cache-deps.sh'
+        ./tools/install-new-deps-dlp.sh && ./tools/cache-deps.sh' || true
+
+    - run: ls -lrt t
+    - uses: actions/upload-artifact@v2
+      with:
+        name: logfiles
+        path: t/testlogs.tgz
 
     - run: ls -l job-* || true
     - run: ls -lrt ~/cachedeps || true
