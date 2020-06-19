@@ -21,11 +21,11 @@ use File::Temp 'tempfile';
 eval 'use Test::More::Color';
 eval 'use Test::More::Color "foreground"';
 
-use needle;
-use cv;
+#use needle;
+#use cv;
 
-cv::init();
-require tinycv;
+#cv::init();
+#require tinycv;
 
 if (0) {
 
