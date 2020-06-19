@@ -25,7 +25,7 @@ use needle;
 use cv;
 
 cv::init();
-require tinycv;
+#require tinycv;
 
 if (0) {
 

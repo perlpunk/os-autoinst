@@ -81,9 +81,9 @@ my $ignore_results_re = qr/fail/;
 my @f = glob("testresults/result*.json");
 diag $_ for @f;
 for my $result (grep { $_ !~ $ignore_results_re } glob("testresults/result*.json")) {
-    diag $result;
+    diag "result file: $result";
     my $json = decode_json(Mojo::File->new($result)->slurp);
-    print __PACKAGE__.':'.__LINE__.$".Data::Dumper->Dump([\$json], ['json']);
+    diag __PACKAGE__.':'.__LINE__.$".Data::Dumper->Dump([\$json], ['json']);
 #    is($json->{result}, 'ok', "Result in $result is ok") or BAIL_OUT("$result failed");
     is($json->{result}, 'ok', "Result in $result is ok") or do {
         done_testing;
