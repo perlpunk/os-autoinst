@@ -77,6 +77,8 @@ is(system('grep -q "get_test_data returned expected file" autoinst-log.txt'), 0,
 is(system('grep -q "save_tmp_file returned expected file" autoinst-log.txt'), 0, 'save_tmp_file test');
 
 my $ignore_results_re = qr/fail/;
+my @f = glob("testresults/result*.json");
+diag $_ for @f;
 for my $result (grep { $_ !~ $ignore_results_re } glob("testresults/result*.json")) {
     my $json = decode_json(Mojo::File->new($result)->slurp);
 #    is($json->{result}, 'ok', "Result in $result is ok") or BAIL_OUT("$result failed");
