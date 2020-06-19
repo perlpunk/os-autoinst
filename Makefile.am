@@ -265,6 +265,8 @@ TEST_OPTS = \
 .PHONY: test
 test:
 	( cd t && $(TEST_OPTS) prove --archive testlogs.tgz --merge $(TESTS) )
+test-ci:
+	( cd t && $(TEST_OPTS) prove -v $(TESTS) )
 
 .PHONY: testv
 testv:
