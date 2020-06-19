@@ -22,7 +22,8 @@ jobs:
       with:
         path: |
           ~/cachedeps
-        key: ${{ github.sha }}-${{ github.ref }}
+        #key: ${{ github.sha }}-${{ github.ref }}
+        key: ${{ github.ref }}
 
     - run: ls -lrt ~/cachedeps || true
 
@@ -34,6 +35,6 @@ jobs:
         -v $PWD:/opt
         $IMAGE
         sh -c 'cd /opt && ./tools/install-patched-qemu.sh &&
-        install-new-deps-dlp.sh && ./tools/cache-deps.sh'
+        ./tools/install-new-deps-dlp.sh && ./tools/cache-deps.sh'
 
     - run: ls -lrt ~/cachedeps || true
