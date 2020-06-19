@@ -42,6 +42,8 @@ jobs:
         ./tools/install-new-deps-dlp.sh && ./tools/cache-deps.sh' || true
 
     - run: ls -lrt t
+    - run: ls -lrt
+    - run: find . -name "*.tgz"
     - uses: actions/upload-artifact@v2
       with:
         name: logfiles
