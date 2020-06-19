@@ -19,8 +19,8 @@ listdeps > $OLDDEPS
 
 #PERLDEPS=($(listdeps_perl))
 #echo "${PERLDEPS[@]}"
-#sudo zypper -n addrepo $DLP dlp || true
-#sudo zypper -n --gpg-auto-import-keys --no-gpg-checks refresh
+sudo zypper -n addrepo $DLP dlp || true
+sudo zypper -n --gpg-auto-import-keys --no-gpg-checks refresh
 #sudo zypper install --from dlp -y ${PERLDEPS[@]}
 
 sudo zypper -n install perl-TAP-Harness-Archive
