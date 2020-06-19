@@ -32,4 +32,6 @@ make test || result=1
 
 echo $result > "$resultfile"
 
+ln -s "$MD5" "job-$JOBID"
+
 exit $result
