@@ -8,6 +8,7 @@
 set -ex
 
 DLP=https://download.opensuse.org/repositories/devel:/languages:/perl/openSUSE_Leap_15.1
+#DLP=http://download.opensuse.org/tumbleweed/repo/oss/
 OLDDEPS=/tmp/deps.txt
 NEWDEPS=/tmp/new-deps.txt
 DIFFDEPS=/tmp/diff-deps.txt
@@ -17,11 +18,10 @@ source ./tools/tools.sh
 listdeps > $OLDDEPS
 
 PERLDEPS=($(listdeps_perl))
-echo "${PERLDEPS[@]}"
-sudo zypper -n addrepo $DLP dlp || true
-sudo zypper -n --gpg-auto-import-keys --no-gpg-checks refresh
-
-sudo zypper install --from dlp -y ${PERLDEPS[@]}
+#echo "${PERLDEPS[@]}"
+#sudo zypper -n addrepo $DLP dlp || true
+#sudo zypper -n --gpg-auto-import-keys --no-gpg-checks refresh
+#sudo zypper install --from dlp -y ${PERLDEPS[@]}
 
 listdeps > $NEWDEPS
 
