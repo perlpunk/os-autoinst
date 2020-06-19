@@ -7,14 +7,14 @@ use Test::More;
 use Test::Warnings ':report_warnings';
 
 use FindBin '$Bin';
-use Try::Tiny;
-use File::Basename;
+#use Try::Tiny;
+#use File::Basename;
 use File::Path qw(make_path remove_tree);
 use File::Temp 'tempfile';
-use Cwd;
+#use Cwd;
 
 
-use OpenQA::Benchmark::Stopwatch;
+#use OpenQA::Benchmark::Stopwatch;
 
 
 # optional but very useful
@@ -27,14 +27,12 @@ use cv;
 cv::init();
 require tinycv;
 
-
-my ($res, $needle, $image, $cand, $img_src);
+if (0) {
 
 my $data_dir   = "$Bin/data";
 my $result_dir = "$data_dir/results";
 
 
-if (0) {
 make_path($result_dir);
 opendir(my $dir, $data_dir) or die("Cannot read directories: $data_dir");
 
@@ -45,7 +43,7 @@ $watch->start();
 
 foreach my $img_src (@all_images) {
     my (undef, $filename) = tempfile('test-XXXXX', DIR => $result_dir, SUFFIX => $img_src, OPEN => 0);
-    $image = tinycv::read($data_dir . '/' . $img_src);
+    my $image = tinycv::read($data_dir . '/' . $img_src);
     if ($image) {
         $image->write($filename);
     }
