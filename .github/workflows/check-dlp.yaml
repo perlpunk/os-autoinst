@@ -41,7 +41,7 @@ jobs:
         sh -c 'cd /opt && ./tools/install-patched-qemu.sh &&
         ./tools/install-new-deps-dlp.sh && ./tools/cache-deps.sh' || true
 
-    - run: git status
+    - run: git status -i
     - run: find . -name "*.tgz"
 
     - uses: actions/upload-artifact@v2
