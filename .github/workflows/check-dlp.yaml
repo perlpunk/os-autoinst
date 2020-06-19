@@ -28,7 +28,8 @@ jobs:
 
     - run: ls -lrt ~/cachedeps || true
 
-    - run: >
+    - name: Run tests
+      run: >
         export JOBID=${{ github.job }}
 
         docker run --rm --entrypoint ''

@@ -33,7 +33,7 @@ result=0
 #make test TESTS="99-full-stack.t" || result=1
 #make test-ci TESTS="99-full-stack.t" || result=1
 #make test || result=1
-make test TESTS="10-terminal.t 10-test-image-conversion-benchmark.t 99-full-stack.t" || result=1
+make test TESTS="10-test-image-conversion-benchmark.t 99-full-stack.t" || result=1
 
 echo $result > "$resultfile"
 
