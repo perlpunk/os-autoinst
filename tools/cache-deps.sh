@@ -28,8 +28,8 @@ echo $result > "$resultfile"
 result=0
 ./autogen.sh && make || (result=1 && exit 1)
 #make check || result=1
-#make test TESTS="t/99-full-stack.t t/09-lockapi.t" || result=1
-make test TESTS="t/09-lockapi.t" || result=1
+#make test TESTS="99-full-stack.t 09-lockapi.t" || result=1
+make test TESTS="09-lockapi.t" || result=1
 
 echo $result > "$resultfile"
 
