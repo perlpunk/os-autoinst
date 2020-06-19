@@ -33,9 +33,7 @@ result=0
 #make test TESTS="99-full-stack.t" || result=1
 #make test-ci TESTS="99-full-stack.t" || result=1
 #make test || result=1
-make test TESTS="t/00-compile-check-all.t t/01-test_needle.t t/02-test_ocr.t t/03-testapi.t
-    t/04-check_vars_docu.t t/05-pod.t t/06-pod-coverage.t t/07-commands.t
-    t/08-autotest.t t/10-terminal.t t/10-test-image-conversion-benchmark.t"
+make test TESTS="t/00-compile-check-all.t t/01-test_needle.t t/02-test_ocr.t t/03-testapi.t t/04-check_vars_docu.t t/05-pod.t t/06-pod-coverage.t t/07-commands.t t/08-autotest.t t/10-terminal.t t/10-test-image-conversion-benchmark.t" || result=1
 
 echo $result > "$resultfile"
 
