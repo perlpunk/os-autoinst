@@ -33,14 +33,16 @@ sub init {
     my $sysdir = undef;
     return if ($sysdir && $libdir eq $sysdir);
     my @s = stat("$libdir/ppmclibs/blib/lib/tinycv.pm");
+    print "# ============= cv::init @s\n";
     unless (@s && -e "$libdir/ppmclibs/tinycv.pm" && $s[7] == (stat(_))[7]) {
+        print "# ============ cv::init tinycv outdated\n";
         $| = 1;
         print STDERR "### Please build the tinycv bindings first:\n";
         print STDERR "cd $libdir/ppmclibs ; perl Makefile.PL\n" unless -e "$libdir/ppmclibs/Makefile";
         print STDERR "make -C $libdir/ppmclibs\n";
         die("tinycv outdated");
     }
-
+    print "# ======= cv::init $libdir/ppmclibs/blib/(arch|lib)\n";
     unshift(@INC, "$libdir/ppmclibs/blib/arch");
     unshift(@INC, "$libdir/ppmclibs/blib/lib");
 }

@@ -26,6 +26,7 @@ use Cwd 'abs_path';
 use Mojo::JSON 'decode_json';
 use FindBin '$Bin';
 use Mojo::File 'tempdir';
+use YAML::XS ();
 
 # optional but very useful
 eval 'use Test::More::Color';
@@ -80,7 +81,9 @@ my $ignore_results_re = qr/fail/;
 my @f = glob("testresults/result*.json");
 diag $_ for @f;
 for my $result (grep { $_ !~ $ignore_results_re } glob("testresults/result*.json")) {
+    diag $result;
     my $json = decode_json(Mojo::File->new($result)->slurp);
+    diag YAML::XS::Dump($json);
 #    is($json->{result}, 'ok', "Result in $result is ok") or BAIL_OUT("$result failed");
     is($json->{result}, 'ok', "Result in $result is ok") or do {
         done_testing;
