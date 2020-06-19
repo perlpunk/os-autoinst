@@ -26,7 +26,7 @@ sudo zypper install --from dlp -y ${PERLDEPS[@]}
 listdeps > $NEWDEPS
 
 echo "Checking updated packages"
-if diff $OLDDEPS $NEWDEPS > $DIFFDEPS; then
+if diff -u999 $OLDDEPS $NEWDEPS > $DIFFDEPS; then
     echo "NO DIFF"
 else
     echo "=============== DIFF"
