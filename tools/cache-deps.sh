@@ -31,7 +31,8 @@ result=0
 #make test TESTS="99-full-stack.t 09-lockapi.t" || result=1
 #make test TESTS="09-lockapi.t" || result=1
 #make test TESTS="99-full-stack.t" || result=1
-make test-ci TESTS="99-full-stack.t" || result=1
+#make test-ci TESTS="99-full-stack.t" || result=1
+make test || result=1
 
 echo $result > "$resultfile"
 
