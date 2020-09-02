@@ -60,7 +60,7 @@ Source0:        %{name}-%{version}.tar.xz
 %else
 %bcond_with yamllint
 %endif
-%if %{with yamllint}
+%if !%{with yamllint}
 # The following line is generated from dependencies.yaml
 %define yamllint_requires python3-yamllint
 %else
