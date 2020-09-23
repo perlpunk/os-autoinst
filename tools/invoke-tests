@@ -34,7 +34,7 @@ while [[ $# -gt 0 ]]; do
 done
 [[ "$@" ]] && TESTS="$@"
 
-db="$build_directory/cover_db"
+db="$source_directory/cover_db"
 [[ $SKIP_IF_COVER_DB_EXISTS ]] && [[ -d $db ]] && exit 0
 
 # set Perl module include path and coverage options
