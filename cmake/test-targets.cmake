@@ -97,31 +97,33 @@ if (COVER_PATH AND PROVE_PATH)
     add_custom_command(
         COMMENT "Run Perl testsuite with coverage instrumentation if no coverage data has been collected so far"
         COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/tools/invoke-tests" --coverage --skip-if-cover-db-exists ${INVOKE_TEST_ARGS}
-        OUTPUT "${CMAKE_CURRENT_SOURCE_DIR}/cover_db"
-        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+        OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/cover_db"
+        WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
     )
     add_custom_command(
         COMMENT "Generate coverage report (HTML)"
-        COMMAND cd "${CMAKE_CURRENT_SOURCE_DIR}" && "${COVER_PATH}" -report html_basic "${CMAKE_CURRENT_SOURCE_DIR}/cover_db"
-        DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/cover_db"
-        OUTPUT "${CMAKE_CURRENT_SOURCE_DIR}/coverage.html"
+        COMMAND "${COVER_PATH}" -report html_basic "${CMAKE_CURRENT_BINARY_DIR}/cover_db"
+        DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/cover_db"
+        OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/coverage.html"
+        WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
     )
     add_custom_target(
         coverage-reset
         COMMENT "Resetting previously gathered Perl test suite coverage"
-        COMMAND rm -r "${CMAKE_CURRENT_SOURCE_DIR}/cover_db"
+        COMMAND rm -r "${CMAKE_CURRENT_BINARY_DIR}/cover_db"
     )
     add_custom_target(
         coverage
         COMMENT "Perl test suite coverage (HTML)"
-        DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/coverage.html"
+        DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/coverage.html"
     )
     add_dependencies(coverage symlinks)
     add_custom_target(
         coverage-codecov
         COMMENT "Perl test suite coverage (codecov)"
-        COMMAND cd "${CMAKE_CURRENT_SOURCE_DIR}" && "${COVER_PATH}" -report codecov "${CMAKE_CURRENT_SOURCE_DIR}/cover_db"
-        DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/cover_db"
+        COMMAND "${COVER_PATH}" -report codecov "${CMAKE_CURRENT_BINARY_DIR}/cover_db"
+        DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/cover_db"
+        WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
     )
     add_dependencies(coverage-codecov symlinks)
 else ()
