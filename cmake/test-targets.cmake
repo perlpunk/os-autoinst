@@ -98,7 +98,7 @@ if (COVER_PATH AND PROVE_PATH)
         COMMENT "Run Perl testsuite with coverage instrumentation if no coverage data has been collected so far"
         COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/tools/invoke-tests" --coverage --skip-if-cover-db-exists ${INVOKE_TEST_ARGS}
         OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/cover_db"
-        WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     )
     add_custom_command(
         COMMENT "Generate coverage report (HTML)"
