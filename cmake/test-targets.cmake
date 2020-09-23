@@ -102,7 +102,7 @@ if (COVER_PATH AND PROVE_PATH)
     )
     add_custom_command(
         COMMENT "Generate coverage report (HTML)"
-        COMMAND cd .. && "${COVER_PATH}" -report html_basic "${CMAKE_CURRENT_BINARY_DIR}/cover_db"
+        COMMAND cd "${CMAKE_CURRENT_SOURCE_DIR}" && "${COVER_PATH}" -report html_basic "${CMAKE_CURRENT_BINARY_DIR}/cover_db"
         DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/cover_db"
         OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/coverage.html"
     )
@@ -120,7 +120,7 @@ if (COVER_PATH AND PROVE_PATH)
     add_custom_target(
         coverage-codecov
         COMMENT "Perl test suite coverage (codecov)"
-        COMMAND cd .. && "${COVER_PATH}" -report codecov "${CMAKE_CURRENT_BINARY_DIR}/cover_db"
+        COMMAND cd "${CMAKE_CURRENT_SOURCE_DIR}" && "${COVER_PATH}" -report codecov "${CMAKE_CURRENT_BINARY_DIR}/cover_db"
         DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/cover_db"
     )
     add_dependencies(coverage-codecov symlinks)
