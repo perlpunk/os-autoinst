@@ -27,7 +27,7 @@ use File::Basename;
 sub init {
     use Config;
     my $vendorlib = $Config{installvendorlib};
-    my $libdir    = dirname(__FILE__);
+    my $libdir    = dirname(dirname(__FILE__));
     # undef is substituted with $(pkglibexecdir) in
     # make install, in the following line. See Makefile.am
     my $sysdir = undef;

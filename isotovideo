@@ -54,6 +54,7 @@ no autodie 'kill';
 
 my $installprefix;    # $bmwqemu::scriptdir
 my $fatal_error;      # the last error message catched by the die handler
+use FindBin '$Bin';
 
 BEGIN {
     # the following line is modified during make install
@@ -65,9 +66,11 @@ BEGIN {
     $SIG{__DIE__} = sub { $fatal_error = shift };
 
     my ($wd) = $0 =~ m-(.*)/-;
+    $wd = $Bin;
     $wd            ||= '.';
     $installprefix ||= $wd;
     unshift @INC, "$installprefix";
+    unshift @INC, "$installprefix/lib";
 }
 
 use bmwqemu;
