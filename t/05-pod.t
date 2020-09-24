@@ -8,5 +8,5 @@ use Test::Pod;
 use File::Basename;
 my $curdir = dirname(__FILE__);
 
-my @files = ($curdir . '/../testapi.pm');
+my @files = ($curdir . '/../lib/testapi.pm');
 all_pod_files_ok(@files);
