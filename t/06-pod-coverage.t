@@ -17,7 +17,7 @@ use File::Basename;
 # explicitly what we care about right now.
 
 my $dirname = dirname(__FILE__);
-chdir($dirname . '/..');
+chdir($dirname . '/../lib');
 
 my $pc = Pod::Coverage->new(
     package  => 'testapi',
