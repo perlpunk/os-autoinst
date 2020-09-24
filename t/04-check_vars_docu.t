@@ -27,7 +27,7 @@ require IPC::System::Simple;
 use autodie ':all';
 
 use constant {
-    BACKEND_DIR => "$FindBin::Bin/../backend",
+    BACKEND_DIR => "$FindBin::Bin/../lib/backend",
     DOC_DIR     => "$FindBin::Bin/../doc",
 };
 use constant VARS_DOC => DOC_DIR . '/backend_vars.asciidoc';
