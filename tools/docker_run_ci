@@ -13,4 +13,5 @@ cd /opt
 cmake -G Ninja -DCMAKE_BUILD_TYPE=Release .
 export WITH_COVER_OPTIONS=1
 ninja -v check
-ninja -v coverage-codecov'
+#ninja -v coverage-codecov
+'
