@@ -30,7 +30,7 @@ sub isotovideo {
     $args{default_opts} //= 'backend=null';
     $args{opts}         //= '';
     $args{exit_code}    //= 1;
-    my $cmd = "perl $toplevel_dir/isotovideo -d $args{default_opts} $args{opts} 2>&1 | tee autoinst-log.txt";
+    my $cmd = "perl $toplevel_dir/bin/isotovideo -d $args{default_opts} $args{opts} 2>&1 | tee autoinst-log.txt";
     note("Starting isotovideo with: $cmd");
     system($cmd);
     $log = $log_file->slurp;
