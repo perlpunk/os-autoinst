@@ -11,9 +11,9 @@ foreach (PERL_MODULE basetest testapi)
     add_custom_command(
         COMMENT "Generating ${PERL_MODULE}.html"
         COMMAND "${POD2HTML_PATH}"
-            --infile "${CMAKE_CURRENT_SOURCE_DIR}/../${PERL_MODULE}.pm"
+            --infile "${CMAKE_CURRENT_SOURCE_DIR}/../lib/${PERL_MODULE}.pm"
             --outfile "${CMAKE_CURRENT_BINARY_DIR}/${PERL_MODULE}.html"
-        DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/../${PERL_MODULE}.pm"
+        DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/../lib/${PERL_MODULE}.pm"
         OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${PERL_MODULE}.html"
     )
     list(APPEND GENERATED_DOC_FILES "${CMAKE_CURRENT_BINARY_DIR}/${PERL_MODULE}.html")
