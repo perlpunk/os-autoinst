@@ -55,7 +55,7 @@ find_program(SPELL_PATH spell)
 if (PODSPELL_PATH AND SPELL_PATH)
     add_test(
         NAME test-doc-testapi-spellchecking
-        COMMAND sh -c "\"${PODSPELL_PATH}\" \"${CMAKE_CURRENT_SOURCE_DIR}/testapi.pm\" | \"${SPELL_PATH}\""
+        COMMAND sh -c "\"${PODSPELL_PATH}\" \"${CMAKE_CURRENT_SOURCE_DIR}/lib/testapi.pm\" | \"${SPELL_PATH}\""
     )
 else ()
     message(STATUS "Set PODSPELL_PATH/SPELL_PATH to the path of the podspell/spell executable to enable spell checking.")
