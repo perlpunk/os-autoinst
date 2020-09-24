@@ -10,72 +10,72 @@ set(DOC_FILES
     doc/networking.md
 )
 set(PERL_FILES
-    autotest.pm
-    backend/amt.pm
-    backend/baseclass.pm
-    backend/console_proxy.pm
-    backend/driver.pm
-    backend/generalhw.pm
-    backend/ikvm.pm
-    backend/ipmi.pm
-    backend/null.pm
-    backend/pvm_hmc.pm
-    backend/pvm.pm
-    backend/qemu.pm
-    backend/s390x.pm
-    backend/spvm.pm
-    backend/svirt.pm
-    backend/virt.pm
-    basetest.pm
-    bmwqemu.pm
-    commands.pm
-    consoles/amtSol.pm
-    consoles/console.pm
-    consoles/ipmiSol.pm
-    consoles/localXvnc.pm
-    consoles/network_console.pm
-    consoles/remoteVnc.pm
-    consoles/s3270.pm
-    consoles/serial_screen.pm
-    consoles/sshIucvconn.pm
-    consoles/ssh_screen.pm
-    consoles/sshVirtsh.pm
-    consoles/sshVirtshSUT.pm
-    consoles/sshX3270.pm
-    consoles/sshXtermIPMI.pm
-    consoles/sshXtermVt.pm
-    consoles/ttyConsole.pm
-    consoles/virtio_terminal.pm
-    consoles/vnc_base.pm
-    consoles/VNC.pm
-    distribution.pm
-    lockapi.pm
-    mmapi.pm
-    myjsonrpc.pm
-    needle.pm
-    ocr.pm
-    OpenQA/Benchmark/Stopwatch.pm
-    OpenQA/Commands.pm
-    OpenQA/Exceptions.pm
-    OpenQA/Isotovideo/CommandHandler.pm
-    OpenQA/Isotovideo/Interface.pm
-    OpenQA/Isotovideo/NeedleDownloader.pm
-    OpenQA/Isotovideo/Utils.pm
-    OpenQA/Qemu/BlockDevConf.pm
-    OpenQA/Qemu/BlockDev.pm
-    OpenQA/Qemu/ControllerConf.pm
-    OpenQA/Qemu/DriveController.pm
-    OpenQA/Qemu/DriveDevice.pm
-    OpenQA/Qemu/DrivePath.pm
-    OpenQA/Qemu/MutParams.pm
-    OpenQA/Qemu/PFlashDevice.pm
-    OpenQA/Qemu/Proc.pm
-    OpenQA/Qemu/SnapshotConf.pm
-    OpenQA/Qemu/Snapshot.pm
-    OpenQA/Test/RunArgs.pm
-    osutils.pm
-    signalblocker.pm
-    testapi.pm
+    lib/autotest.pm
+    lib/backend/amt.pm
+    lib/backend/baseclass.pm
+    lib/backend/console_proxy.pm
+    lib/backend/driver.pm
+    lib/backend/generalhw.pm
+    lib/backend/ikvm.pm
+    lib/backend/ipmi.pm
+    lib/backend/null.pm
+    lib/backend/pvm_hmc.pm
+    lib/backend/pvm.pm
+    lib/backend/qemu.pm
+    lib/backend/s390x.pm
+    lib/backend/spvm.pm
+    lib/backend/svirt.pm
+    lib/backend/virt.pm
+    lib/basetest.pm
+    lib/bmwqemu.pm
+    lib/commands.pm
+    lib/consoles/amtSol.pm
+    lib/consoles/console.pm
+    lib/consoles/ipmiSol.pm
+    lib/consoles/localXvnc.pm
+    lib/consoles/network_console.pm
+    lib/consoles/remoteVnc.pm
+    lib/consoles/s3270.pm
+    lib/consoles/serial_screen.pm
+    lib/consoles/sshIucvconn.pm
+    lib/consoles/ssh_screen.pm
+    lib/consoles/sshVirtsh.pm
+    lib/consoles/sshVirtshSUT.pm
+    lib/consoles/sshX3270.pm
+    lib/consoles/sshXtermIPMI.pm
+    lib/consoles/sshXtermVt.pm
+    lib/consoles/ttyConsole.pm
+    lib/consoles/virtio_terminal.pm
+    lib/consoles/vnc_base.pm
+    lib/consoles/VNC.pm
+    lib/distribution.pm
+    lib/lockapi.pm
+    lib/mmapi.pm
+    lib/myjsonrpc.pm
+    lib/needle.pm
+    lib/ocr.pm
+    lib/OpenQA/Benchmark/Stopwatch.pm
+    lib/OpenQA/Commands.pm
+    lib/OpenQA/Exceptions.pm
+    lib/OpenQA/Isotovideo/CommandHandler.pm
+    lib/OpenQA/Isotovideo/Interface.pm
+    lib/OpenQA/Isotovideo/NeedleDownloader.pm
+    lib/OpenQA/Isotovideo/Utils.pm
+    lib/OpenQA/Qemu/BlockDevConf.pm
+    lib/OpenQA/Qemu/BlockDev.pm
+    lib/OpenQA/Qemu/ControllerConf.pm
+    lib/OpenQA/Qemu/DriveController.pm
+    lib/OpenQA/Qemu/DriveDevice.pm
+    lib/OpenQA/Qemu/DrivePath.pm
+    lib/OpenQA/Qemu/MutParams.pm
+    lib/OpenQA/Qemu/PFlashDevice.pm
+    lib/OpenQA/Qemu/Proc.pm
+    lib/OpenQA/Qemu/SnapshotConf.pm
+    lib/OpenQA/Qemu/Snapshot.pm
+    lib/OpenQA/Test/RunArgs.pm
+    lib/osutils.pm
+    lib/signalblocker.pm
+    lib/testapi.pm
 )
 set(MISC_FILES
     consoles/icewm.cfg
@@ -147,7 +147,7 @@ add_custom_command(
     COMMENT "Make install version of isotovideo"
     COMMAND
         sed -e "\"s,\\$$installprefix = undef\;,\\$$installprefix = '${CMAKE_INSTALL_PREFIX}/${OS_AUTOINST_DATA_DIR}'\;,\""
-        "${CMAKE_CURRENT_SOURCE_DIR}/isotovideo" > "${CMAKE_CURRENT_BINARY_DIR}/install-target/bin/isotovideo"
+        "${CMAKE_CURRENT_SOURCE_DIR}/bin/isotovideo" > "${CMAKE_CURRENT_BINARY_DIR}/install-target/bin/isotovideo"
     DEPENDS "isotovideo" "CMakeLists.txt" "${CMAKE_CURRENT_BINARY_DIR}/install-target"
     OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/install-target/bin/isotovideo"
 )
