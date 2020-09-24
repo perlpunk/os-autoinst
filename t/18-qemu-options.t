@@ -64,7 +64,7 @@ my $log_file  = path('autoinst-log.txt');
 my $log       = '';
 sub run_isotovideo {
     $vars_json->spurt(encode_json({@common_options, @_}));
-    system("perl $toplevel_dir/isotovideo -d qemu_disable_snapshots=1 2>&1 | tee autoinst-log.txt");
+    system("perl $toplevel_dir/bin/isotovideo -d qemu_disable_snapshots=1 2>&1 | tee autoinst-log.txt");
     $log = $log_file->slurp;
 }
 

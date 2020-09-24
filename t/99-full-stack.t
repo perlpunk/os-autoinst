@@ -66,7 +66,7 @@ close($var);
 # create screenshots
 open($var, '>', 'live_log');
 close($var);
-system("perl $toplevel_dir/isotovideo -d 2>&1 | tee autoinst-log.txt");
+system("perl $toplevel_dir/bin/isotovideo -d 2>&1 | tee autoinst-log.txt");
 is(system('grep -q "\d*: EXIT 0" autoinst-log.txt'),                                            0, 'test executed fine');
 is(system('grep -q "\d* Snapshots are supported" autoinst-log.txt'),                            0, 'Snapshots are enabled');
 is(system('grep -q "do not wait_still_screen" autoinst-log.txt'),                               0, 'test type string and do not wait');
@@ -122,7 +122,7 @@ print $var <<EOV;
 EOV
 
 # call isotovideo with additional test parameters provided by command line
-system("perl $toplevel_dir/isotovideo -d qemu_disable_snapshots=1 2>&1 | tee autoinst-log.txt");
+system("perl $toplevel_dir/bin/isotovideo -d qemu_disable_snapshots=1 2>&1 | tee autoinst-log.txt");
 isnt(system('grep -q "assert_screen_fail_test" autoinst-log.txt'), 0, 'assert screen test not scheduled');
 is(system('grep -q "\d* Snapshots are not supported" autoinst-log.txt'), 0, 'Snapshots are not supported');
 is(system('grep -q "isotovideo done" autoinst-log.txt'),                 0, 'isotovideo is done');
