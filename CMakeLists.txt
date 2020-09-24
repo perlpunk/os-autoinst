@@ -147,27 +147,27 @@ add_custom_command(
     COMMENT "Make install version of isotovideo"
     COMMAND
         sed -e "\"s,\\$$installprefix = undef\;,\\$$installprefix = '${CMAKE_INSTALL_PREFIX}/${OS_AUTOINST_DATA_DIR}'\;,\""
-        "${CMAKE_CURRENT_SOURCE_DIR}/isotovideo" > "${CMAKE_CURRENT_BINARY_DIR}/install-target/isotovideo"
+        "${CMAKE_CURRENT_SOURCE_DIR}/isotovideo" > "${CMAKE_CURRENT_BINARY_DIR}/install-target/bin/isotovideo"
     DEPENDS "isotovideo" "CMakeLists.txt" "${CMAKE_CURRENT_BINARY_DIR}/install-target"
-    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/install-target/isotovideo"
+    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/install-target/bin/isotovideo"
 )
 add_custom_command(
     COMMENT "Make install version of cv.pm"
     COMMAND
         sed -e "\"s,\\$$sysdir = undef\;,\\$$sysdir = '${CMAKE_INSTALL_PREFIX}/${OS_AUTOINST_DATA_DIR}'\;,\""
-        "${CMAKE_CURRENT_SOURCE_DIR}/cv.pm" > "${CMAKE_CURRENT_BINARY_DIR}/install-target/cv.pm"
+        "${CMAKE_CURRENT_SOURCE_DIR}/lib/cv.pm" > "${CMAKE_CURRENT_BINARY_DIR}/install-target/lib/cv.pm"
     DEPENDS "cv.pm" "CMakeLists.txt" "${CMAKE_CURRENT_BINARY_DIR}/install-target"
-    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/install-target/cv.pm"
+    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/install-target/lib/cv.pm"
 )
 add_custom_target(generate-install-versions ALL
     COMMENT "Generate install version of isotovideo and cv.pm"
-    DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/install-target/isotovideo" "${CMAKE_CURRENT_BINARY_DIR}/install-target/cv.pm"
+    DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/install-target/bin/isotovideo" "${CMAKE_CURRENT_BINARY_DIR}/install-target/lib/cv.pm"
 )
 
 # install non-C++ files
 set(EXECUTABLE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 install(
-    FILES "${CMAKE_CURRENT_BINARY_DIR}/install-target/isotovideo"
+    FILES "${CMAKE_CURRENT_BINARY_DIR}/install-target/bin/isotovideo"
     DESTINATION "${CMAKE_INSTALL_BINDIR}"
     PERMISSIONS ${EXECUTABLE_PERMISSIONS}
 )
@@ -178,7 +178,7 @@ foreach (FILE ${PERL_FILES} ${MISC_FILES})
     get_filename_component(SUB_DIR ${FILE} DIRECTORY)
     install(FILES "${FILE}" DESTINATION "${OS_AUTOINST_DATA_DIR}/${SUB_DIR}")
 endforeach ()
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/install-target/cv.pm" DESTINATION "${OS_AUTOINST_DATA_DIR}")
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/install-target/lib/cv.pm" DESTINATION "${OS_AUTOINST_DATA_DIR}")
 
 # install openvswitch files
 install(
