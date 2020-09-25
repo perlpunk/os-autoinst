@@ -38,6 +38,10 @@ my $data_dir     = "$Bin/data/";
 my $pool_dir     = "$dir/pool/";
 mkdir $pool_dir;
 
+# Workaround for running perl scripts from a different directory
+local $ENV{PERL5OPT} = $ENV{PERL5OPT};
+$ENV{PERL5OPT} =~ s/cover_db/cover_db.systemcall/;
+
 note("data dir: $data_dir");
 note("pool dir: $pool_dir");
 

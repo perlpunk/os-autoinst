@@ -39,6 +39,10 @@ mkdir $pool_dir;
 chdir $pool_dir;
 my $cleanup = scope_guard sub { chdir $Bin; undef $dir };
 
+# Workaround for running perl scripts from a different directory
+local $ENV{PERL5OPT} = $ENV{PERL5OPT};
+$ENV{PERL5OPT} =~ s/cover_db/cover_db.systemcall/;
+
 # just save ourselves some time during testing
 $ENV{OSUTILS_WAIT_ATTEMPT_INTERVAL} //= 1;
 $ENV{QEMU_QMP_CONNECT_ATTEMPTS}     //= 1;

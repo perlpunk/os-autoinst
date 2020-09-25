@@ -25,6 +25,10 @@ mkdir $pool_dir;
 my $log_file = path('autoinst-log.txt');
 my $log      = '';
 
+# Workaround for running perl scripts from a different directory
+local $ENV{PERL5OPT} = $ENV{PERL5OPT};
+$ENV{PERL5OPT} =~ s/cover_db/cover_db.systemcall/;
+
 sub isotovideo {
     my (%args) = @_;
     $args{default_opts} //= 'backend=null';

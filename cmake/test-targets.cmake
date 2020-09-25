@@ -102,14 +102,14 @@ if (COVER_PATH AND PROVE_PATH)
     )
     add_custom_command(
         COMMENT "Generate coverage report (HTML)"
-        COMMAND "${COVER_PATH}" -report html_basic "${CMAKE_CURRENT_BINARY_DIR}/cover_db"
+        COMMAND "${COVER_PATH}" -report html_basic "${CMAKE_CURRENT_BINARY_DIR}/cover_db*"
         DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/cover_db"
         OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/coverage.html"
     )
     add_custom_target(
         coverage-reset
         COMMENT "Resetting previously gathered Perl test suite coverage"
-        COMMAND rm -r "${CMAKE_CURRENT_BINARY_DIR}/cover_db"
+        COMMAND rm -r "${CMAKE_CURRENT_BINARY_DIR}/cover_db*"
     )
     add_custom_target(
         coverage
@@ -120,7 +120,7 @@ if (COVER_PATH AND PROVE_PATH)
     add_custom_target(
         coverage-codecov
         COMMENT "Perl test suite coverage (codecov)"
-        COMMAND "${COVER_PATH}" -report codecov "${CMAKE_CURRENT_BINARY_DIR}/cover_db"
+        COMMAND "${COVER_PATH}" -report codecov "${CMAKE_CURRENT_BINARY_DIR}/cover_db*"
         DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/cover_db"
     )
     add_dependencies(coverage-codecov symlinks)
