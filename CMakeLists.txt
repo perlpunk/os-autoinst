@@ -58,6 +58,7 @@ set(PERL_FILES
     OpenQA/Benchmark/Stopwatch.pm
     OpenQA/Commands.pm
     OpenQA/Exceptions.pm
+    OpenQA/Isotovideo.pm
     OpenQA/Isotovideo/CommandHandler.pm
     OpenQA/Isotovideo/Interface.pm
     OpenQA/Isotovideo/NeedleDownloader.pm
