@@ -47,6 +47,15 @@ sub shutdown {
     stop_autotest();
 }
 
+sub init_backend {
+    my ($name) = @_;
+
+    $bmwqemu::vars{BACKEND} ||= "qemu";
+    $bmwqemu::backend = backend::driver->new($bmwqemu::vars{BACKEND});
+    return $bmwqemu::backend;
+}
+
+
 # note: The subsequently defined stop_* functions are used to tear down the process tree.
 #       However, the worker also ensures that all processes are being terminated (and
 #       eventually killed).

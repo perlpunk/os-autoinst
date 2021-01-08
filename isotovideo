@@ -95,7 +95,7 @@ use OpenQA::Isotovideo::Utils qw(checkout_git_repo_and_branch
 use IO::Select;
 
 use OpenQA::Isotovideo qw( $backend_process $cmd_srv_process $testprocess
-    $command_handler $testfd $cmd_srv_port );
+  $command_handler $testfd $cmd_srv_port );
 
 OpenQA::Isotovideo::startup();
 
@@ -134,10 +134,8 @@ diag(_get_version_string());
 # enable debug default when started from a tty
 $bmwqemu::direct_output = $options{debug};
 
-select(STDERR);
-$| = 1;
-select(STDOUT);    # default
-$| = 1;
+STDERR->autoflush(1);
+STDOUT->autoflush(1);
 
 $bmwqemu::scriptdir = $installprefix;
 bmwqemu::init();
@@ -158,14 +156,6 @@ sub signalhandler {
     return $loop = 0 if $loop;
     OpenQA::Isotovideo::shutdown("received signal $sig");
     _exit(1);
-}
-
-sub init_backend {
-    my ($name) = @_;
-
-    $bmwqemu::vars{BACKEND} ||= "qemu";
-    $bmwqemu::backend = backend::driver->new($bmwqemu::vars{BACKEND});
-    return $bmwqemu::backend;
 }
 
 $SIG{TERM} = \&signalhandler;
@@ -219,7 +209,7 @@ sub main {
 
     ($testprocess, $testfd) = autotest::start_process();
 
-    init_backend();
+    OpenQA::Isotovideo::init_backend();
 
     open(my $fd, ">", "os-autoinst.pid");
     print $fd "$$\n";
