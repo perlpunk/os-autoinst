@@ -41,8 +41,9 @@ sub startup {
 }
 
 sub shutdown {
+    my ($msg) = @_;
     stop_backend();
-    stop_commands('test execution ended through exception');
+    stop_commands($msg);
     stop_autotest();
 }
 

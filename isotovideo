@@ -156,9 +156,7 @@ sub signalhandler {
     my ($sig) = @_;
     bmwqemu::serialize_state(component => 'isotovideo', msg => "isotovideo received signal $sig", log => 1);
     return $loop = 0 if $loop;
-    OpenQA::Isotovideo::stop_backend();
-    OpenQA::Isotovideo::stop_commands("received signal $sig");
-    OpenQA::Isotovideo::stop_autotest;
+    OpenQA::Isotovideo::shutdown("received signal $sig");
     _exit(1);
 }
 
@@ -335,7 +333,7 @@ sub main {
 $fatal_error = undef;
 
 END {
-    OpenQA::Isotovideo::shutdown();
+    OpenQA::Isotovideo::shutdown('test execution ended through exception');
 
     # in case of early exit, e.g. help display
     $return_code //= 0;
