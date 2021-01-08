@@ -16,6 +16,8 @@ package OpenQA::Isotovideo;
 # with this program; if not, see <http://www.gnu.org/licenses/>.
 #
 
+use strict;
+use warnings;
 use Mojo::IOLoop::ReadWriteProcess::Session 'session';
 use Time::HiRes qw(gettimeofday tv_interval sleep time);
 
@@ -27,9 +29,11 @@ our $backend_process;
 our $cmd_srv_process;
 our $testprocess;
 our $command_handler;
+our $testfd;
+our $cmd_srv_port;
 
 our @EXPORT_OK = qw( $backend_process $cmd_srv_process $testprocess
-    $command_handler );
+  $command_handler $testfd $cmd_srv_port );
 
 sub startup {
     session->enable;
@@ -41,6 +45,10 @@ sub shutdown {
     stop_commands('test execution ended through exception');
     stop_autotest();
 }
+
+# note: The subsequently defined stop_* functions are used to tear down the process tree.
+#       However, the worker also ensures that all processes are being terminated (and
+#       eventually killed).
 
 sub stop_backend {
     return unless defined $bmwqemu::backend && $backend_process;
@@ -90,7 +98,7 @@ sub stop_autotest {
     diag('done with autotest process');
 }
 
-my ($last_check_seconds, $last_check_microseconds) = gettimeofday;
+my ($last_check_seconds, $last_check_microseconds);
 sub check_asserted_screen {
     my $no_wait = shift;
 
