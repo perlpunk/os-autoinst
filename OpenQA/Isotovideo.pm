@@ -46,7 +46,7 @@ our $loop = 1;
 
 # global exit status
 our $return_code = 1;
-our @EXPORT_OK = qw( $return_code );
+our @EXPORT_OK   = qw( $return_code );
 
 sub startup {
     session->enable;

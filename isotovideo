@@ -100,7 +100,7 @@ sub version {
     exit 0;
 }
 
-my $fatal_error;      # the last error message catched by the die handler
+my $fatal_error;    # the last error message catched by the die handler
 # record the last die message
 # note: It might *not* be a fatal error so we don't call bmwqemu::serialize_state here
 #       immediately but only in the END block.
