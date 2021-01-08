@@ -76,23 +76,15 @@ use autotest;
 use commands;
 use distribution;
 use testapi 'diag';
-use File::Basename;
+use File::Basename qw(dirname);
 use Getopt::Long;
-require IPC::System::Simple;
+use IPC::System::Simple;
 use POSIX qw(:sys_wait_h _exit);
-use Time::HiRes qw(gettimeofday tv_interval sleep time);
-use Try::Tiny;
-use File::Spec;
-use File::Path;
-use Mojo::UserAgent;
-use Mojo::IOLoop::ReadWriteProcess 'process';
-use Mojo::IOLoop::ReadWriteProcess::Session 'session';
+use IO::Select;
 Getopt::Long::Configure("no_ignore_case");
-use OpenQA::Isotovideo::CommandHandler;
 use OpenQA::Isotovideo::Interface;
 use OpenQA::Isotovideo::Utils qw(checkout_git_repo_and_branch
   checkout_git_refspec handle_generated_assets load_test_schedule);
-use IO::Select;
 
 use OpenQA::Isotovideo qw( $backend_process $cmd_srv_process $testprocess
   $command_handler $testfd $cmd_srv_port );

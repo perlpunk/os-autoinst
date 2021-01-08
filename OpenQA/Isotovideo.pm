@@ -21,6 +21,7 @@ use warnings;
 use Mojo::IOLoop::ReadWriteProcess::Session 'session';
 use Time::HiRes qw(gettimeofday tv_interval sleep time);
 
+use OpenQA::Isotovideo::CommandHandler;
 use testapi 'diag';
 
 use base 'Exporter';
