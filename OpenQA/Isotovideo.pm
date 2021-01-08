@@ -36,16 +36,15 @@ use testapi 'diag';
 
 use base 'Exporter';
 
-our $backend_process;
-our $cmd_srv_process;
-our $testprocess;
-our $command_handler;
-our $testfd;
-our $cmd_srv_port;
+my $backend_process;
+my $cmd_srv_process;
+my $testprocess;
+my $command_handler;
+my $testfd;
+my $cmd_srv_port;
 our $loop = 1;
 
-our @EXPORT_OK = qw( $backend_process $cmd_srv_process $testprocess
-  $command_handler $testfd $cmd_srv_port $loop );
+our @EXPORT_OK = qw( $loop );
 
 sub startup {
     session->enable;

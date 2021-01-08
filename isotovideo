@@ -79,8 +79,7 @@ use IO::Select;
 Getopt::Long::Configure("no_ignore_case");
 use OpenQA::Isotovideo::Interface;
 
-use OpenQA::Isotovideo qw( $backend_process $cmd_srv_process $testprocess
-  $command_handler $testfd $cmd_srv_port $loop );
+use OpenQA::Isotovideo qw( $loop );
 
 OpenQA::Isotovideo::startup();
 
