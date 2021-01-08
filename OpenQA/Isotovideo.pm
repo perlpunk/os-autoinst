@@ -22,7 +22,7 @@ use autodie ':all';
 no autodie 'kill';
 use Mojo::IOLoop::ReadWriteProcess::Session 'session';
 use Time::HiRes qw(gettimeofday tv_interval sleep time);
-use IPC::System::Simple;
+use IO::Select;
 
 use OpenQA::Isotovideo::Utils qw(checkout_git_repo_and_branch
   checkout_git_refspec handle_generated_assets load_test_schedule);
@@ -44,7 +44,9 @@ my $testfd;
 my $cmd_srv_port;
 our $loop = 1;
 
-our @EXPORT_OK = qw( $loop );
+# global exit status
+our $return_code = 1;
+our @EXPORT_OK = qw( $return_code );
 
 sub startup {
     session->enable;
@@ -58,7 +60,35 @@ sub _shutdown {
     stop_autotest();
 }
 
-sub main {
+sub signalhandler {
+    my ($sig) = @_;
+    bmwqemu::serialize_state(component => 'isotovideo', msg => "isotovideo received signal $sig", log => 1);
+    return $loop = 0 if $loop;
+    OpenQA::Isotovideo::_shutdown("received signal $sig");
+    _exit(1);
+}
+
+sub run {
+    my @args = @_;
+
+    local $SIG{TERM} = \&signalhandler;
+    local $SIG{INT}  = \&signalhandler;
+    local $SIG{HUP}  = \&signalhandler;
+
+    # make sure all commands coming from the backend will not be in the
+    # developers's locale - but a defined english one. This is SUSE's
+    # default locale
+    $ENV{LC_ALL} = 'en_US.UTF-8';
+    $ENV{LANG}   = 'en_US.UTF-8';
+
+    bmwqemu::init();
+    for my $arg (@args) {
+        if ($arg =~ /^([[:alnum:]_\[\]\.]+)=(.+)/) {
+            my $key = uc $1;
+            $bmwqemu::vars{$key} = $2;
+            diag("Setting forced test parameter $key -> $2");
+        }
+    }
     my $cmd_srv_fd;
 
     checkout_git_repo_and_branch('CASEDIR');
@@ -145,7 +175,7 @@ sub main {
             $loop = 0;
     });
 
-    my $return_code = 0;
+    $return_code = 0;
 
     # enter the main loop: process messages from autotest, command server and backend
     while ($loop) {
