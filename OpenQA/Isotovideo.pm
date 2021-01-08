@@ -71,6 +71,9 @@ sub signalhandler {
 sub run {
     my @args = @_;
 
+    STDERR->autoflush(1);
+    STDOUT->autoflush(1);
+
     local $SIG{TERM} = \&signalhandler;
     local $SIG{INT}  = \&signalhandler;
     local $SIG{HUP}  = \&signalhandler;
