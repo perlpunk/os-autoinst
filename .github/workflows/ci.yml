@@ -28,6 +28,6 @@ jobs:
     - name: Check Commit Type
       uses: gsactions/commit-message-checker@v1
       with:
-        pattern: '\[[^]]+\] .+$'
-        flags: 'gm'
-        error: 'Your first line has to contain a commit type like "[BUGFIX]".'
+        pattern: '^[^\n]+($|\n\n.)'
+        flags: ''
+        error: 'Blank line after git commit subject please'
