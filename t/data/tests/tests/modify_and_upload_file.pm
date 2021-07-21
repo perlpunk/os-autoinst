@@ -45,7 +45,8 @@ sub run {
     $content =~ s/PASSWORD/nots3cr3t/g;
     save_tmp_file('modified.xml', $content);
     # Verify that correct file is downloaded
-    assert_script_run("wget -v $url");
+    validate_script_output("wget $url 2>&1", qr{foobar});
+#    assert_script_run("wget -v $url");
     script_run "echo '72d2c15cb10535f36862d7d2eecc8a79  modified.xml' > modified.md5";
     assert_script_run("md5sum -c modified.md5");
 

@@ -28,6 +28,7 @@ use Mojo::JSON 'decode_json';
 use Mojo::File qw(path tempdir);
 use Mojo::Util qw(scope_guard);
 
+#my $dir = "$Bin/temp"; mkdir $dir;
 my $dir          = tempdir("/tmp/$FindBin::Script-XXXX");
 my $toplevel_dir = "$Bin/..";
 my $data_dir     = "$Bin/data/";
@@ -103,6 +104,9 @@ subtest 'Assert screen failure' => sub {
 };
 
 diag "autoinst-log.txt:\n>>>$log<<<";
+
+my $out = qx{for i in $dir/pool/testresults/modify_and_upload_file-*.txt; do echo \$i; cat \$i; done};
+diag $out;
 done_testing;
 exit;
 
