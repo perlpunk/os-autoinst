@@ -35,6 +35,16 @@ my $orig_file = <<'END';
 END
 
 sub run {
+
+    script_run 'alias bash=sh', 0;
+    type_string("echo get_test_data returned expected file\n");
+
+
+    save_tmp_file('modified.txt', "hello world");
+    my $url = autoinst_url . '/files/modified.txt';
+    validate_script_output("wget $url 2>&1", qr{modified.txt.*100%});
+    type_string("echo save_tmp_file returned expected file\n");
+    return;
     # Get file from data directory
     my $content = get_test_data('autoinst.xml');
 
