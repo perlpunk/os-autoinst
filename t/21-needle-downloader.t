@@ -5,6 +5,7 @@ use Test::Most;
 use Mojo::Base -strict, -signatures;
 use FindBin '$Bin';
 use lib "$Bin/../external/os-autoinst-common/lib";
+use OpenQA::Test::CheckGitStatus;
 use OpenQA::Test::TimeLimit '5';
 use File::Touch;
 use File::Path qw(make_path remove_tree);

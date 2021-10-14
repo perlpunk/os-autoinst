@@ -12,6 +12,7 @@ BEGIN { *CORE::GLOBAL::sleep = sub { push @invoked_cmds, [sleep => shift] } }
 
 use FindBin '$Bin';
 use lib "$Bin/../external/os-autoinst-common/lib";
+use OpenQA::Test::CheckGitStatus;
 use OpenQA::Test::TimeLimit '5';
 use Test::MockModule;
 use Test::Warnings qw(:all :report_warnings);

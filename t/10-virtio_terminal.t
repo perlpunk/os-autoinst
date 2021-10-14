@@ -4,6 +4,9 @@
 use Test::Most;
 use Mojo::Base -strict, -signatures;
 use Test::Warnings qw(:all :report_warnings);
+use FindBin qw($Bin);
+use lib "$Bin/../external/os-autoinst-common/lib";
+use OpenQA::Test::CheckGitStatus;
 
 # OpenQA::Test::TimeLimit not used as `prepare_pipes` defines an ALRM handler
 # internally already

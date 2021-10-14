@@ -12,6 +12,8 @@ use Mojo::File qw(path);
 use Mojo::JSON qw(decode_json);
 use Test::Output qw(stderr_like);
 use Test::Warnings ':report_warnings';
+use lib "$Bin/../external/os-autoinst-common/lib";
+use OpenQA::Test::CheckGitStatus;
 
 # ensure a consistent base for relative paths
 # note: Using relative paths here so the paths in the output will always be the same.

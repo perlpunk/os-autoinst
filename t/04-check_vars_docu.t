@@ -8,8 +8,10 @@ use Test::Most;
 use Mojo::Base -strict, -signatures;
 
 use Test::Warnings ':report_warnings';
-use FindBin;
+use FindBin qw($Bin);
 use File::Find;
+use lib "$Bin/../external/os-autoinst-common/lib";
+use OpenQA::Test::CheckGitStatus;
 require IPC::System::Simple;
 use autodie ':all';
 

@@ -8,6 +8,7 @@ use Mojo::Base -strict, -signatures;
 
 use FindBin '$Bin';
 use lib "$Bin/../external/os-autoinst-common/lib";
+use OpenQA::Test::CheckGitStatus;
 use OpenQA::Test::TimeLimit '300';
 use Test::Warnings ':report_warnings';
 use Try::Tiny;

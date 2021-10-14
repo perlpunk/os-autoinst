@@ -20,6 +20,7 @@ BEGIN {
 
 use FindBin;
 use lib "$FindBin::Bin/../external/os-autoinst-common/lib";
+use OpenQA::Test::CheckGitStatus;
 use OpenQA::Test::TimeLimit '5';
 use Test::Fatal;
 use Test::Output;

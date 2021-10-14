@@ -46,6 +46,7 @@ if [[ $WITH_COVER_OPTIONS ]]; then
     select="($path_regex)(OpenQA|backend|consoles|ppmclibs)/|($path_regex)isotovideo|($path_regex)[^/]+\.pm,-ignore,\.t|data/tests/|fake/tests/|$prove_path"
     export PERL5OPT="-MDevel::Cover=-db,$db,-select,$select,-coverage,statement"
 fi
+export CHECK_GIT_STATUS=1
 
 # set variables for tests which need to invoke the make tool
 export OS_AUTOINST_BUILD_DIRECTORY=$build_directory

@@ -5,6 +5,9 @@ use Mojo::Base -strict, -signatures;
 use Test::More;
 use Test::Fatal;
 use Test::Warnings;
+use FindBin '$Bin';
+use lib "$Bin/../external/os-autoinst-common/lib";
+use OpenQA::Test::CheckGitStatus;
 
 BEGIN {
     unshift @INC, '..';

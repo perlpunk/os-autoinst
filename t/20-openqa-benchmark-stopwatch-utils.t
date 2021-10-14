@@ -4,6 +4,9 @@ use Test::Most;
 use Mojo::Base -strict, -signatures;
 use Test::Warnings ':report_warnings';
 use Time::HiRes 'sleep';
+use FindBin '$Bin';
+use lib "$Bin/../external/os-autoinst-common/lib";
+use OpenQA::Test::CheckGitStatus;
 
 
 use OpenQA::Benchmark::Stopwatch;
