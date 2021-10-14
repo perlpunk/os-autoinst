@@ -350,6 +350,6 @@ stderr_like {
 done_testing();
 
 END {
-    unlink "$Bin/vars.json";
+    unlink "vars.json", "base_state.json", "foo";
     rmtree "$Bin/testresults";
 }
