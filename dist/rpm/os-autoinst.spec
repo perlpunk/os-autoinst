@@ -197,6 +197,7 @@ ln -s ../sbin/service %{buildroot}%{_sbindir}/rcos-autoinst-openvswitch
 export NO_BRP_STALE_LINK_ERROR=yes
 
 %check
+exit 1
 export CI=1
 # account for sporadic slowness in build environments
 # https://progress.opensuse.org/issues/89059
