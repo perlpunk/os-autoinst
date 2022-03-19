@@ -43,11 +43,11 @@ use parent 'Class::Accessor::Fast';
 has [qw(
       update_request_interval last_update_request screenshot_interval
       last_screenshot last_image assert_screen_check
+      reference_screenshot assert_screen_tags assert_screen_needles
 )];
 
 __PACKAGE__->mk_accessors(
     qw(
-      reference_screenshot assert_screen_tags assert_screen_needles
       assert_screen_deadline assert_screen_fails assert_screen_last_check
       stall_detected
     ));
