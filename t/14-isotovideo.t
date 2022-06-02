@@ -30,9 +30,9 @@ sub isotovideo (%args) {
     $args{default_opts} //= 'backend=null';
     $args{opts} //= '';
     $args{exit_code} //= 1;
-    my @cmd = ($^X, "$toplevel_dir/isotovideo", '-d', $args{default_opts}, split(' ', $args{opts}));
+    my @cmd = ($^X, "$toplevel_dir/isotovideo", '--workdir', $pool_dir, '-d', $args{default_opts}, split(' ', $args{opts}));
     note "Starting isotovideo with: @cmd";
-    my $output = qx(@cmd);
+    my $output = qx(cd $toplevel_dir && @cmd);
     my $res = $?;
     return fail 'failed to execute isotovideo: ' . $! if $res == -1;    # uncoverable statement
     return fail 'isotovideo died with signal ' . ($res & 127) if $res & 127;    # uncoverable statement
