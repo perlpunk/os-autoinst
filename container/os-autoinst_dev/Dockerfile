@@ -1,13 +1,13 @@
 #!BuildTag: os-autoinst_dev
-FROM opensuse/leap:15.3
+FROM opensuse/tumbleweed
 
 # Define environment variable
 ENV NAME openQA test environment
 ENV LANG en_US.UTF-8
 
 # install system-user-qemu already here to workaround bsc#1182451
-RUN zypper ar -f -G 'http://download.opensuse.org/repositories/devel:/openQA:/Leap:/15.3/openSUSE_Leap_15.3' devel_openqa && \
-    zypper -n in system-user-qemu && \
+#RUN zypper ar -f -G 'http://download.opensuse.org/repositories/devel:/openQA:/Leap:/15.3/openSUSE_Leap_15.3' devel_openqa && \
+RUN zypper -n in system-user-qemu && \
     zypper clean
 
 # AUTODEPS START
