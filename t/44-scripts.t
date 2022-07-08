@@ -24,13 +24,15 @@ for my $key (keys %types) {
     delete $types{$key} unless $allowed_types{$types{$key}};
 }
 
+use Config;
+diag explain \%Config;
+exit;
 %types = qw( isotovideo 1 );
 for (1..100) {
     diag "loop $_";
     for my $script (sort keys %types) {
         my $start = [gettimeofday];
         my $out = qx{timeout 3 $Bin/../$script --help 2>&1};
-        diag "($script) >>$out<<";
         my $rc = $? >> 8;
         my $el = tv_interval($start);
         diag "($script) elapsed: $el";
