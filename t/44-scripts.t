@@ -26,7 +26,6 @@ for my $key (keys %types) {
 
 use Config;
 diag explain \%Config;
-exit;
 %types = qw( isotovideo 1 );
 for (1..100) {
     diag "loop $_";
