@@ -1,7 +1,7 @@
 package consoles::VNC;
 
 use Mojo::Base -base, -signatures;
-use bytes;
+#use bytes;
 use IO::Socket::INET;
 use bmwqemu qw(diag fctwarn);
 use Time::HiRes qw( sleep gettimeofday time );
@@ -658,7 +658,7 @@ sub map_and_send_key ($self, $keys, $down_flag, $press_release_delay) {
             next;
         }
         else {
-            die decode_utf8 "No map for '$key'";
+            die "No map for '$key'";
         }
     }
 
