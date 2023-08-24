@@ -34,8 +34,9 @@ script called main.pm. This is either located in $vars{PRODUCTDIR} or
 $vars{CASEDIR} (e.g. <distribution>/products/<product>/main.pm).
 
 Wheels can be used to add functionality from other repositories. If a file
-wheels.yaml is present the specified git repositories are cloned before tests
-are run. $vars{WHEELS_DIR} defaults to $vars{CASEDIR} if not set explicitly.
+`wheels.yaml` is present the specified git repositories are cloned before tests
+are run. $vars{WHEELS_DIR} defaults to the working directory of `isotovideo`
+if not set explicitly and determines where wheels are stored.
 
 This script does not actually run the tests, but queues them to be run by
 autotest.pm. A test is queued by calling the loadtest function which is also
@@ -45,7 +46,8 @@ loadtest is called.
 =cut
 
 sub find_script ($script) {
-    if (defined(my $wheel = (glob Cwd::getcwd . "/*/tests/$script"))) {
+    my $wheels_dir = $bmwqemu::vars{WHEELS_DIR} // Cwd::getcwd;
+    if (defined(my $wheel = glob "$wheels_dir/*/tests/$script")) {
         return $wheel;
     }
     my $casedir = $bmwqemu::vars{CASEDIR};
