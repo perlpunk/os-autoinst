@@ -140,22 +140,27 @@ subtest 'isotovideo with wheels' => sub {
             $case_dir, $wheels_dir) } qr@Unsupported version.*\Q$specfile\E.*@, 'unsupported version';
     $specfile->spurt("version: v0.1\nwheels: [https://github.com/foo/bar.git]");
     my $utils_mock = Test::MockModule->new('OpenQA::Isotovideo::Utils');
+    my $bmwqemu_mock = Test::MockModule->new('bmwqemu');
     my @repos;
-    $utils_mock->redefine(checkout_git_repo_and_branch => sub ($dir_variable, %args) { push @repos, $args{repo} });
+    $utils_mock->redefine(clone_git => sub ($local_path, $clone_url, $clone_depth, $branch, $dir, $dir_variable, $direct_fetch) {
+        push @repos, [$clone_url, $branch];
+        return 1;
+    });
     checkout_wheels($case_dir, $wheels_dir);
-    is($repos[0], 'https://github.com/foo/bar.git', 'repo with full URL');
+    is($repos[0][0], 'https://github.com/foo/bar.git', 'repo with full URL');
     is(scalar @repos, 1, 'one wheel');
     $specfile->spurt("version: v0.1\nwheels: [https://github.com/foo/bar.git#branch]");
     checkout_wheels($case_dir, $wheels_dir);
-    is($repos[1], 'https://github.com/foo/bar.git#branch', 'repo URL with branch');
+    is($repos[1][0], 'https://github.com/foo/bar.git', 'repo URL with branch');
+    is($repos[1][1], 'branch', 'repo URL with branch');
     is(scalar @repos, 2, 'one wheel');
     $specfile->spurt("version: v0.1\nwheels: [foo/bar]");
     checkout_wheels($case_dir, $wheels_dir);
     is(scalar @repos, 3, 'one wheel');
-    is($repos[2], 'https://github.com/foo/bar.git', 'only wheel');
+    is($repos[2][0], 'https://github.com/foo/bar.git', 'only wheel');
     $specfile->spurt("version: v0.1\nwheels: [foo/bar, spam/eggs]");
     checkout_wheels($case_dir, $wheels_dir);
-    is($repos[4], 'https://github.com/spam/eggs.git', 'second wheel');
+    is($repos[4][0], 'https://github.com/spam/eggs.git', 'second wheel');
     is(scalar @repos, 5, 'two wheels');
     $specfile->remove;
     is(checkout_wheels($case_dir, $wheels_dir), 1, 'no wheels');
@@ -164,20 +169,39 @@ subtest 'isotovideo with wheels' => sub {
     # also verify that isotovideo invokes the wheel code correctly
     $specfile->spurt("version: v0.1\nwheels: [copy/writer]");
 
-    for my $dir (("$data_dir/wheels_dir", undef)) {
-        chdir($pool_dir);
-        unlink('vars.json') if -e 'vars.json';
+    my @warnings;
+    my @infos;
+    my @diags;
+    $bmwqemu_mock->redefine(fctwarn => sub { push @warnings, $_[0] });
+    $bmwqemu_mock->redefine(fctinfo => sub { push @infos, $_[0] });
+    $bmwqemu_mock->redefine(diag => sub { push @diags, $_[0] });
+
+    my @tests = ("$data_dir/wheels_dir", undef);
+    for my $i (0..$#tests) {
+        my $dir = $tests[$i];
+        chdir $pool_dir;
+        unlink 'vars.json' if -e 'vars.json';
         $wheels_dir = $dir // $pool_dir;
         $bmwqemu::vars{CASEDIR} = $case_dir;
-        $bmwqemu::vars{SCHEDULE} = 'pen/ink';
+        $bmwqemu::vars{PRODUCTDIR} = $pool_dir;
+        $bmwqemu::vars{SCHEDULE} = "pen/ink$i";
         $bmwqemu::vars{WHEELS_DIR} = $dir;
 
         subtest "wheels in $wheels_dir" => sub {
-            path($wheels_dir, 'writer', 'lib', 'Copy', 'Writer')->make_path->child('Content.pm')->spurt("package Copy::Writer::Content; use Mojo::Base 'Exporter'; our \@EXPORT_OK = qw(write); sub write {}; 1");
-            path($wheels_dir, 'writer', 'tests', 'pen')->make_path->child('ink.pm')->spurt("use Mojo::Base 'basetest'; use Copy::Writer::Content 'write'; sub run {}; 1");
+            @diags = ();
+            path($wheels_dir, 'writer', 'lib', 'Copy', 'Writer')->make_path->child("Content$i.pm")->spurt(<<~"EOM");
+            package Copy::Writer::Content$i;
+            use Mojo::Base 'Exporter';
+            our \@EXPORT_OK = qw(write);
+            sub write { "val$i"};
+            1;
+            EOM
+            path($wheels_dir, 'writer', 'tests', 'pen')->make_path->child("ink$i.pm")->spurt("use Mojo::Base 'basetest'; use Copy::Writer::Content$i 'write'; sub run {}; 1");
             checkout_wheels($case_dir, $wheels_dir);
-            my $log = lives_ok { combined_from { load_test_schedule } } 'no error';
-            like $log, qr/scheduling ink/, 'module from the wheel scheduled';
+            load_test_schedule;
+            like $diags[0], qr/scheduling ink$i/, 'module from the wheel scheduled';
+            my $ret = eval "Copy::Writer::Content${i}::write()";
+            is $ret, "val$i", 'called function in wheel library returns expected value';
             rmtree "$wheels_dir/writer";
         };
     }

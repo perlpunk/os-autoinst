@@ -19,6 +19,7 @@ use Scalar::Util 'blessed';
 use Mojo::IOLoop::ReadWriteProcess 'process';
 use Mojo::IOLoop::ReadWriteProcess::Session 'session';
 use Mojo::File qw(path);
+use File::Glob qw/ bsd_glob /;
 
 our @EXPORT_OK = qw(loadtest $selected_console $last_milestone_console query_isotovideo);
 
@@ -47,7 +48,7 @@ loadtest is called.
 
 sub find_script ($script) {
     my $wheels_dir = $bmwqemu::vars{WHEELS_DIR} // Cwd::getcwd;
-    if (defined(my $wheel = glob "$wheels_dir/*/tests/$script")) {
+    if (defined(my $wheel = bsd_glob "$wheels_dir/*/tests/$script")) {
         return $wheel;
     }
     my $casedir = $bmwqemu::vars{CASEDIR};
