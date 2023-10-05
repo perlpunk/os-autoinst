@@ -2,11 +2,15 @@
 name: ci
 # yamllint disable-line rule:truthy
 on: [push, pull_request]
+env:
+  PERL_TEST_WARNINGS_ONLY_REPORT_WARNINGS: 1
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: PERL_TEST_WARNINGS_ONLY_REPORT_WARNINGS=${{ env.PERL_TEST_WARNINGS_ONLY_REPORT_WARNINGS }}
+        run: echo "PERL_TEST_WARNINGS_ONLY_REPORT_WARNINGS is set to $PERL_TEST_WARNINGS_ONLY_REPORT_WARNINGS"
       - name: Static checks, unit- and integration tests
         run: tools/container_run_ci
       - name: Upload coverage to Codecov

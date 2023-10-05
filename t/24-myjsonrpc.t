@@ -27,6 +27,9 @@ $isotovideo->autoflush(1);
 
 my $send1 = {a => 1, umlaut => "testä"};
 my $send2 = {b => 12, json_cmd_token => 'dummy'};
+my $x;
+
+my $y = 1 + $x;
 
 subtest single_json => sub {
     myjsonrpc::send_json($child, $send1);
