@@ -10,7 +10,8 @@ on:
         description: 'Set to 1 to fail if any of the RETRY fails'
         default: 0
 env:
-  PERL_TEST_WARNINGS_ONLY_REPORT_WARNINGS: ${{ vars.PERL_TEST_WARNINGS_ONLY_REPORT_WARNINGS }}
+  # Set to 1 to temporarily ignore warnings
+  PERL_TEST_WARNINGS_ONLY_REPORT_WARNINGS: 1
 
 jobs:
   fullstack:
@@ -19,8 +20,6 @@ jobs:
       image: registry.opensuse.org/devel/openqa/ci/containers/base:latest
     steps:
       - uses: actions/checkout@v1
-      - name: PERL_TEST_WARNINGS_ONLY_REPORT_WARNINGS=${{ env.PERL_TEST_WARNINGS_ONLY_REPORT_WARNINGS }}
-        run: echo "PERL_TEST_WARNINGS_ONLY_REPORT_WARNINGS is set to $PERL_TEST_WARNINGS_ONLY_REPORT_WARNINGS"
       - name: Make project folder user-writable
         run: sudo chown -R $USER ../../os-autoinst
       - name: Clone openQA
