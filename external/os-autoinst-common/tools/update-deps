@@ -1,6 +1,7 @@
 #!/usr/bin/env perl
-# Copyright 2020 SUSE LLC
-# SPDX-License-Identifier: MIT
+# Copyright SUSE LLC
+# SPDX-License-Identifier: GPL-2.0-or-later
+
 use strict;
 use warnings;
 use 5.010;
@@ -12,16 +13,16 @@ use Getopt::Long;
 use FindBin qw($Bin);
 
 GetOptions(
-    "help|h" => \my $help,
-    "specfile=s" => \my $specfile,
-    "dockerfile=s" => \my $dockerfile,
+    'help|h' => \my $help,
+    'specfile=s' => \my $specfile,
+    'dockerfile=s' => \my $dockerfile,
 );
 
 usage(0) if $help;
 usage(1) unless $specfile;
 
 my $scriptname = path(__FILE__)->to_rel("$Bin/..");
-my $yamlfile = "dependencies.yaml";
+my $yamlfile = 'dependencies.yaml';
 my $file = "$Bin/../$yamlfile";
 my $cpanfile = "$Bin/../cpanfile";
 
@@ -39,8 +40,7 @@ update_spec();
 update_cpanfile($modules_by_target);
 update_dockerfile($dockerfile) if $dockerfile;
 
-sub update_dockerfile {
-    my ($dockerfile) = @_;
+sub update_dockerfile ($dockerfile) {
     my $docker = path($dockerfile)->slurp;
     my @perl;
     my @pkg;
@@ -81,7 +81,7 @@ EOM
     say "Updated $dockerfile";
 }
 
-sub update_spec {
+sub update_spec() {
 
     for my $target (@$spectargets) {
         my $name = $target . '_requires';
@@ -115,9 +115,7 @@ sub update_spec {
     say "Updated $specfile";
 }
 
-sub get_modules {
-    my ($data, $cpantargets, $cpantarget_mapping) = @_;
-
+sub get_modules ($data, $cpantargets, $cpantarget_mapping) {
     my %modules_by_target;
     for my $target (@$cpantargets) {
         my $name = $target . '_requires';
@@ -136,18 +134,17 @@ sub get_modules {
     return \%modules_by_target;
 }
 
-sub _requires_line {
+sub _requires_line ($modules, $module) {
+    # Generates the following:
     # requires 'Archive::Extract', '> 0.7';
-    my ($hash, $module) = @_;
-    my $version = $hash->{$module};
+    my $version = $modules->{$module};
     my $line = "requires '$module'";
     $line .= qq{, '$version'} if $version;
     $line .= ";\n";
     return $line;
 }
 
-sub update_cpanfile {
-    my ($modules_by_target) = @_;
+sub update_cpanfile ($modules_by_target) {
     my $cpan = <<"EOM";
 ##################################################
 # WARNING
@@ -190,8 +187,7 @@ EOM
     say "Updated $cpanfile";
 }
 
-sub usage {
-    my ($exit) = @_;
+sub usage ($exit) {
     print <<"EOM";
 Usage:
     # update cpanfile and dist/rpm/os-autoinst.spec

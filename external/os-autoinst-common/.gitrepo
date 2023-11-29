@@ -5,8 +5,8 @@
 ;
 [subrepo]
 	remote = git@github.com:os-autoinst/os-autoinst-common.git
-	branch = master
-	commit = 1b05ad55dabef8176f683f24c5e70283a6ca2135
-	parent = 9b31e8770b86dfbb479e325f494d0b7cdbf56d66
+	branch = unify_perltidy
+	commit = 99ed5c228bb365a6c7ae258730a8eacf06829eeb
+	parent = a2deffd6181a780a229681bbd61a5dddb316165b
 	method = merge
 	cmdver = 0.4.6

@@ -1,13 +1,13 @@
-# Copyright 2020-2021 SUSE LLC
+# Copyright SUSE LLC
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 package OpenQA::Test::TimeLimit;
 use Test::Most;
+use experimental 'signatures';
 
 my $SCALE_FACTOR = $ENV{OPENQA_TEST_TIMEOUT_SCALE_FACTOR} // 1;
 
-sub import {
-    my ($package, $limit) = @_;
+sub import ($package, $limit = undef) {
     die "$package: Need argument on import, e.g. use: use OpenQA::Test::TimeLimit '42';" unless $limit;
     # disable timeout if requested by ENV variable or running within debugger
     return if ($ENV{OPENQA_TEST_TIMEOUT_DISABLE} or $INC{'perl5db.pl'});
@@ -18,8 +18,8 @@ sub import {
     alarm $limit;
 }
 
-sub scale_timeout {
-    return $_[0] * $SCALE_FACTOR;
+sub scale_timeout ($time) {
+    return $time * $SCALE_FACTOR;
 }
 
 1;
