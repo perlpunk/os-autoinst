@@ -5,6 +5,7 @@
 use strict;
 use warnings;
 use 5.010;
+use experimental 'signatures';
 
 use YAML::PP;
 use Data::Dumper;
