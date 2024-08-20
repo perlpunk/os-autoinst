@@ -8,6 +8,19 @@ jobs:
     runs-on: ubuntu-latest
     name: Report OBS Url
     steps:
-    - run: |
-        env | sort
+    - uses: actions/checkout@v4
+    - name: debug
+      run: |
         echo "PR: ${{ github.event.pull_request.number }}"
+        echo "run_number: ${{ github.run_number }}"
+        env | sort
+
+    - name: Comment
+      # Only run once on pull request creation
+      if: github.run_number == 1
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        gh issue comment ${{ github.event.pull_request.number }} \
+          --body "You might want to check the OBS project created for this PR: https://build.opensuse.org/project/show/devel:openQA:GitHub:os-autoinst:os-autoinst:${{ github.event.pull_request.number }}"$'\n'"Here you can find all pull requests: https://build.opensuse.org/project/subprojects/devel:openQA:GitHub"$'\n'"_(This is just a little helper in case the OBS workflow fails and does not report the URL yet.)_"
+
