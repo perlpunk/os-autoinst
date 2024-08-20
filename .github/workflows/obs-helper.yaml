@@ -8,6 +8,21 @@ jobs:
     runs-on: ubuntu-latest
     name: Report OBS Url
     steps:
+    - uses: actions/checkout@v4
     - run: |
-        env | sort
         echo "PR: ${{ github.event.pull_request.number }}"
+        echo "run_number: ${{ github.run_number }}"
+        env | sort
+
+
+        #https://build.opensuse.org/project/show/devel:openQA:GitHub:os-autoinst:os-autoinst:PR-2468
+
+    - name: Comment
+#      if: github.run_number == 27
+
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        gh issue comment ${{ github.event.pull_request.number }} \
+          --body "You might want to check the OBS project created for this PR: https://build.opensuse.org/project/show/devel:openQA:GitHub:os-autoinst:os-autoinst:${{ github.event.pull_request.number }}"$'\n'"If it doesn't exist, check the list of subprojects here for os-autoinst:os-autoinst:${{ github.event.pull_request.number }}: https://build.opensuse.org/project/subprojects/devel:openQA:GitHub"
+
