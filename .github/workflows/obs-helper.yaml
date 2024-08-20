@@ -14,9 +14,6 @@ jobs:
         echo "run_number: ${{ github.run_number }}"
         env | sort
 
-
-        #https://build.opensuse.org/project/show/devel:openQA:GitHub:os-autoinst:os-autoinst:PR-2468
-
     - name: Comment
 #      if: github.run_number == 27
 
@@ -24,5 +21,5 @@ jobs:
         GH_TOKEN: ${{ github.token }}
       run: |
         gh issue comment ${{ github.event.pull_request.number }} \
-          --body "You might want to check the OBS project created for this PR: https://build.opensuse.org/project/show/devel:openQA:GitHub:os-autoinst:os-autoinst:${{ github.event.pull_request.number }}"$'\n'"If it doesn't exist, check the list of subprojects here for os-autoinst:os-autoinst:${{ github.event.pull_request.number }}: https://build.opensuse.org/project/subprojects/devel:openQA:GitHub"
+          --body "You might want to check the OBS project created for this PR: https://build.opensuse.org/project/show/devel:openQA:GitHub:os-autoinst:os-autoinst:${{ github.event.pull_request.number }}"$'\n'"Here you can find all pull requests: https://build.opensuse.org/project/subprojects/devel:openQA:GitHub"$'\n'"This is justy a little helper in case the OBS workflow fails and does not report the URL yet."
 
