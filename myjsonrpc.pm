@@ -15,6 +15,7 @@ use constant DEBUG_JSON => $ENV{PERL_MYJSONRPC_DEBUG} || 0;
 use constant READ_BUFFER => $ENV{PERL_MYJSONRPC_BYTES} || 8_000_000;
 
 sub send_json ($to_fd, $cmd) {
+    #warn __PACKAGE__.':'.__LINE__.": =========== send_json\n";
     # allow regular expressions to be automatically converted into
     # strings, using the Regex::TO_JSON function as defined at the end
     # of this file.
@@ -24,6 +25,10 @@ sub send_json ($to_fd, $cmd) {
 
     # deep copy to add a random string
     my %cmdcopy = %$cmd;
+    if ($cmd->{cmd} and $cmd->{cmd} eq 'tests_done') {
+#        warn __PACKAGE__.':'.__LINE__.": =========== send_json tests_done sleep\n";
+#        die 23;
+    }
     # The hash might already contain a json_cmd_token
     $cmdcopy{json_cmd_token} ||= bmwqemu::random_string(8);
 
@@ -38,7 +43,14 @@ sub send_json ($to_fd, $cmd) {
     $json .= "\n";
 
     confess 'myjsonprc: called on undefined file descriptor' unless defined $to_fd;
-    my $wb = syswrite($to_fd, "$json");
+    my $wb;
+#    if ($cmd->{cmd} and $cmd->{cmd} eq 'tests_done') {
+#        warn __PACKAGE__.':'.__LINE__.": =========== send_json tests_done\n";
+#        $wb = syswrite($to_fd, '{}');
+#    }
+#    else {
+        $wb = syswrite($to_fd, "$json");
+#    }
     if (!$wb || $wb != length($json)) {
         die('myjsonrpc: remote end terminated connection, stopping') if !DEBUG_JSON && $! =~ qr/Broken pipe/;
         confess "syswrite failed: $!";

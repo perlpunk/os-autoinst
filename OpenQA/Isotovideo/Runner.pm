@@ -125,7 +125,9 @@ sub handle_commands ($self) {
         backend_out_fd => $self->backend->process->channel_out,
     );
     $command_handler->on(tests_done => sub (@) {
-            CORE::close($self->testfd);
+            bmwqemu::diag("on tests_done");
+            #die 23;
+            CORE::close($self->testfd) or die "Could not close testfd: $!";
             $self->testfd(undef);
             $self->stop_autotest();
             $self->loop(0);

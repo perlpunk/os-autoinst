@@ -289,6 +289,7 @@ sub _handle_command_set_current_test ($self, $response, @) {
 }
 
 sub _handle_command_tests_done ($self, $response, @) {
+    diag "_handle_command_tests_done";
     $self->test_died($response->{died});
     $self->test_completed($response->{completed});
     $self->emit(tests_done => $response);
