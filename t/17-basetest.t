@@ -24,6 +24,8 @@ chdir $dir;
 my $cleanup = scope_guard sub { chdir $Bin; undef $dir };
 mkdir 'testresults';
 
+path("$FindBin::Bin/testfile")->touch;
+
 use basetest;
 use needle;
 
