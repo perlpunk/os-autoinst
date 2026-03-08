@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Author tests
     container:
-      image: registry.opensuse.org/devel/openqa/containers/os-autoinst_dev
+      image: ghcr.io/perlpunk/openqa_dev:latest
     steps:
       - uses: actions/checkout@v4
       - name: make test-local
