@@ -122,6 +122,7 @@ sub _framenumber_to_timerange ($frame) {
 }
 
 sub record_screenmatch ($self, $img, $match, $tags = [], $failed_needles = [], $frame = undef) {
+#    warn __PACKAGE__.':'.__LINE__.": ========================= record_screenmatch\n";
     my $serialized_match = $self->_serialize_match($match);
     my $properties = $match->{needle}->{properties} || [];
     my $result = {
@@ -201,6 +202,7 @@ sub _serialize_match ($self, $candidate) {
 }
 
 sub record_screenfail ($self, %args) {
+#    warn __PACKAGE__.':'.__LINE__.": ====================== record_screenfail\n";
     my $img = $args{img};
     my $needles = $args{needles} || [];
     my $tags = $args{tags} || [];
@@ -388,7 +390,9 @@ sub save_test_result ($self) {
     return $result;
 }
 
-sub _increment_test_count ($self, $max = $bmwqemu::vars{MAX_TEST_STEPS} // 50_000) {
+sub _increment_test_count ($self, $max = undef, $inc = 1) {
+    $max //= $bmwqemu::vars{MAX_TEST_STEPS} // 50_000;
+#    warn __PACKAGE__.':'.__LINE__.": ========================== _increment_test_count ++$self->{test_count}\n";
     if ($total_result_count >= $max) {
         my $msg = "Maximum allowed test steps (MAX_TEST_STEPS=$max) exceeded";
         $self->{fatal_failure} = 1;
@@ -396,12 +400,14 @@ sub _increment_test_count ($self, $max = $bmwqemu::vars{MAX_TEST_STEPS} // 50_00
         OpenQA::Exception::InternalException->throw(error => $msg);
     }
     ++$total_result_count;
-    ++$self->{test_count};
+    ++$self->{test_count} if $inc;
+    return $self->{test_count};
 }
 
-sub next_resultname ($self, $type, $name = undef) {
+sub next_resultname ($self, $type, $name = undef, $inc = 1) {
     my $testname = $self->{name};
-    my $count = $self->_increment_test_count;
+    my $count = $self->_increment_test_count(undef, $inc);
+#    warn __PACKAGE__.':'.__LINE__.": =============== next_resultname $testname $count\n";
     return $name ? "$testname-$count.$name.$type" : "$testname-$count.$type";
 }
 
@@ -418,6 +424,7 @@ within the openQA web interface.
 =cut
 
 sub record_resultfile ($self, $title, $output, %nargs) {
+#    warn __PACKAGE__.':'.__LINE__.": ======================= record_resultfile $title\n";
     my $filename = $self->next_resultname('txt', $nargs{resultname});
     my $detail = {
         title => $title,
@@ -441,6 +448,7 @@ sub record_serialresult ($self, $ref, $res, $string = undef) {
 }
 
 sub record_soft_failure_result ($self, $reason = undef, %args) {
+#    warn __PACKAGE__.':'.__LINE__.": ========================= record_soft_failure_result\n";
     $reason //= '(no reason specified)';
     my $result = $self->record_testresult('softfail', %args);
     my $filename = $self->next_resultname('txt');
@@ -468,6 +476,8 @@ test details and returns it.
 =cut
 
 sub record_testresult ($self, $result = undef, %args) {
+#    warn __PACKAGE__.':'.__LINE__.": ===================== record_testresult\n";
+#    warn __PACKAGE__.':'.__LINE__.$".Data::Dumper->Dump([\%args], ['args']);
     $result //= 'unk';
     # assign result as overall result unless it is already worse
     my $current_result = \$self->{result};
@@ -492,6 +502,7 @@ sub record_testresult ($self, $result = undef, %args) {
     $self->_increment_test_count;
     my $detail = {result => $result};
     push(@{$self->{details}}, $detail);
+#    warn __PACKAGE__.':'.__LINE__.$".Data::Dumper->Dump([\$detail], ['detail']);
     return $detail;
 }
 
@@ -501,7 +512,8 @@ internal function to add a screenshot to an existing result structure
 
 =cut
 
-sub _result_add_screenshot ($self, $result) {
+sub _result_add_screenshot ($self, $result, $inc = 1) {
+#    warn __PACKAGE__.':'.__LINE__.": ========================== _result_add_screenshot\n";
     my $rsp = autotest::query_isotovideo('backend_last_screenshot_data');
     my $img = $rsp->{image};
     return $result unless $img;
@@ -509,7 +521,7 @@ sub _result_add_screenshot ($self, $result) {
     $img = tinycv::from_ppm(decode_base64($img));
     return $result unless $img;
 
-    my $file_name = $self->next_resultname('png');
+    my $file_name = $self->next_resultname('png', undef, $inc);
     $img->write_with_thumbnail(join('/', bmwqemu::result_dir(), $file_name));
 
     $result->{screenshot} = $file_name;
@@ -526,7 +538,7 @@ add screenshot with 'unk' result if an image is available
 sub take_screenshot ($self, $res = undef) {
     $res //= 'unk';
     my $result = $self->record_testresult($res);
-    $self->_result_add_screenshot($result);
+    $self->_result_add_screenshot($result, 0);
 
     # prevent adding incomplete result to details in case no image was available
     $self->remove_last_result() unless ($result->{screenshot});
